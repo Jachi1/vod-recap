@@ -1,17 +1,23 @@
 {% extends "homepage/base.html" %}
 {% load static %}
 
+
 {% block title %}Home{% endblock %}
 
 {% block css %}
 <link rel="stylesheet" href="{% static 'css/index.css' %}">
 {% endblock %}
 
+{% block js %}
+<script src="{% static 'js/submit.js' %}"></script>
+{% endblock %}
+
+
 {% block content %}
     <div id="search-contents" class="h-100 d-flex justify-content-center align-items-center">
         <div class="input-group mb-3 w-50">
             <div class="input-group-prepend">
-                <button class="btn btn-outline-primary" type="button">Fetch Metrics!</button>
+                <button class="btn btn-outline-primary" type="button" onclick="submit_url();">Fetch Metrics!</button>
             </div>
             <input id="search-box" type="text" class="form-control" maxlength="60" placeholder="Enter Twitch or YouTube VOD URL">
         </div>
