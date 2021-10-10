@@ -7,7 +7,6 @@ Display metrics about Twitch/YouTube vods
 # Usage
 ```bash
 # After installing dependencies:
-cd vodrecap
 python manage.py runserver
 
 ```
