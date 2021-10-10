@@ -1,0 +1,1 @@
+web: gunicorn vodrecap.asgi:application -k uvicorn.workers.UvicornWorker
