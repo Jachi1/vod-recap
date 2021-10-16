@@ -5,22 +5,28 @@
 // 4. Store input from API as JSON
 // 5. Create and display visualizations
 
-const api_base_url = "https://vod-recap-api.herokuapp.com";
+const api_base_url = "https://vod-recap-api.ue.r.appspot.com";
+var data = {};
+
+google.charts.load('current', {'packages':['corechart']});
+google.charts.setOnLoadCallback(empty);
+
+function empty() {
+    return;
+}
 
 
 function submit_url() {
     // Fetch input in #search-box DOM element
-    url= $("#search-box").val();
-    console.log(url);
+    url= $("#search-box").val();                        // TODO: Add check if query is same as current. If so, do not fetch
+    $("#search-contents").css("margin-top", "-2em");
+    $(".loader").css("display", "block");
+    // localStorage.setItem("query", url);              // Maybe use localstorage to cache previous results?
 
     // Submit query to API, play loading animation, reformat page to show visualizations
     submit_url_to_api(url).then(
-        console.log("Finished fetching results.")        // Replace this with a loading animation
+        console.log("Fetching results...")
     );
-
-    // TODO: While query is processing, we want to change the main page 
-    // so that the search bar is at the top, and a loading icon appears
-    // in the middle of the page until the query finishes and visualizations are created.
 }
 
 function sanitize_url(url) {
@@ -38,8 +44,10 @@ function submit_url_to_api(url) {
 }
 
 function get_results(result, status, xhr) {
-    var data = JSON.parse(JSON.stringify(result));
-    console.log(data[0]["message"]);
+    data = JSON.parse(JSON.stringify(result));
+    // console.log(data[0]["message"]);
+    $(".loader").css("display", "none");                    // Remove spinner, then fill out visualization divs
+    create_visualizations(data);                            // Function will create all the other visualizations
 }
 
 function failure(result) {
