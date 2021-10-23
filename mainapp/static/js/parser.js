@@ -43,7 +43,6 @@ function emote_messages_per_second_vis(chat_data, interval) {
     vis.addColumn('number', 'Emote Messages');
 
     for (let msg = 0; msg < Object.keys(parsed_data).length; msg++) {
-        console.log(String(msg), parsed_data[msg]);
         vis.addRow([String(msg), parsed_data[msg]]);
     }
 
@@ -89,7 +88,6 @@ function messages_per_second_vis(chat_data, interval) {
     vis.addColumn('number', 'Messages');
 
     for (let msg = 0; msg < Object.keys(parsed_data).length; msg++) {
-        console.log(String(msg), parsed_data[msg]);
         vis.addRow([String(msg), parsed_data[msg]]);
     }
 
@@ -137,7 +135,6 @@ function sub_messages_per_second_vis(chat_data, interval) {
     vis.addColumn('number', 'Subscriber Messages');
 
     for (let msg = 0; msg < Object.keys(parsed_data).length; msg++) {
-        console.log(String(msg), parsed_data[msg]);
         vis.addRow([String(msg), parsed_data[msg]]);
     }
 
@@ -178,7 +175,6 @@ function messages_per_user_vis(chat_data) {
     vis.addColumn('number', 'Messages');
 
     for (const [user, count] of Object.entries(parsed_data)) {
-        console.log(user, count);
         vis.addRow([user, count]);
     }
 
@@ -223,7 +219,6 @@ function emote_by_usage_vis(chat_data) {
     vis.addColumn('number', 'Usage');
 
     for (const [emote, count] of Object.entries(parsed_data)) {
-        console.log(emote, count);
         vis.addRow([emote, count]);
     }
 
