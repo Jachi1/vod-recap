@@ -28,36 +28,36 @@ html, body {
 #vod-header {
     background-color: var(--bs-gray-500);
     color: white;
-    align-items: left;
     border: 5px;
     border-top-left-radius: 15px;
     border-top-right-radius: 15px;
 }
 
-#web-title{
-    margin: 10px;
-    color: white;
-    text-align: left;
-    font-size: 40px;
-}
-
-#vod-header img {
-    max-width: 100%;
-    height: auto;
-}
-
+/* TWITCH/YOUTUBE LOGO */
 #vod-header a {
     max-width: 8%;
     height: auto;
     align-items: left;
     margin-left: 10px;
+    float: left;
+}
+#vod-header img {
+    max-width: 100%;
+    height: auto;
+}
+/* ------------------- */
+
+#web-title{
+    margin: 10px;
+    font-size: 40px;
+    float: left;
+    width: 72%;
 }
 
 #vod-info{
-    margin: 10px;
-    color: white;
-    text-align: left;
-    font-size: 40px;
+    float: right;
+    width: 20%;
+    padding: 10px;
 }
 
 .visual {

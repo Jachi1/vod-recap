@@ -21,11 +21,12 @@ function create_visualizations(chat_data) {
         document.getElementById("vod-header").innerHTML = 
             "<a href='" + url + "'><img src = \"static/youtube-logo.png\"></a>" + 
             "<div id = \"web-title\">Visualizing Youtube VOD Data</div>" + "<br>";
-    }    
+    }
+    // Vod Information
     document.getElementById("vod-header").innerHTML += 
-        "<div class = \"vod-info\">" + 
+        "<div id = \"vod-info\">" + 
         "Number of Messages: " + chat_data.length + "<br>" +
-        "VOD Length: " + "<br>" + 
+        "Chat Length: " + chat_data[chat_data.length - 1]["time_stamp_in_vod"] + "<br>" + 
         "</div>";
 }
 
