@@ -7,8 +7,26 @@ function create_visualizations(chat_data) {
     messages_per_second_vis(chat_data, 30);
     emote_or_not_messages_per_second_vis(chat_data, 30);
     sub_messages_per_second_vis(chat_data, 30);
+    sub_or_not_messages_per_second_vis(chat_data, 30);
     messages_per_user_vis(chat_data);
     emote_by_usage_vis(chat_data);
+
+    // Print header-bar to display VOD header information
+    if (url.substr(12, 6) == "twitch"){
+        document.getElementById("vod-header").innerHTML = 
+            "<a href='" + url + "'><img src = \"static/twitch-logo.png\"></a>" +
+            "<div id = \"web-title\">Visualizing Twitch VOD Data</div>" + "<br>";
+    }
+    else if (url.substr(12, 7) == "youtube"){
+        document.getElementById("vod-header").innerHTML = 
+            "<a href='" + url + "'><img src = \"static/youtube-logo.png\"></a>" + 
+            "<div id = \"web-title\">Visualizing Youtube VOD Data</div>" + "<br>";
+    }    
+    document.getElementById("vod-header").innerHTML += 
+        "<div class = \"vod-info\">" + 
+        "Number of Messages: " + chat_data.length + "<br>" +
+        "VOD Length: " + "<br>" + 
+        "</div>";
 }
 
 
@@ -200,6 +218,59 @@ function sub_messages_per_second_vis(chat_data, interval) {
     };
 
     var chart = new google.visualization.LineChart(document.getElementById('sub_messages_per_second'));
+    chart.draw(vis, options);
+}
+
+
+
+function sub_or_not_messages_per_second_parse(chat, interval) {
+    // Function to parse the chat vod data into the proper format
+    if (!interval) {
+        return;
+    }
+
+    let current_position = 0;
+    var mps = {};
+    for (var msg = 0; msg < chat.length; msg++) {
+        tis = parseInt(chat[msg]["time_in_seconds"]);
+        let position = Math.floor(tis / interval);
+
+        while (current_position <= position) {
+            mps[current_position] = [0,0];
+            current_position++;
+        }
+
+        if (chat[msg]["subscriber"]) {
+            mps[position][1] = mps[position][1] + 1;
+        }
+        else{
+            mps[position][0] = mps[position][0] + 1;
+        }
+    }
+    return mps;
+}
+
+function sub_or_not_messages_per_second_vis(chat_data, interval) {
+    // Function to create the visualization, and insert the visualization into its respective <div>
+    var parsed_data = sub_or_not_messages_per_second_parse(chat_data, interval);
+    
+    var vis = new google.visualization.DataTable(); 
+    vis.addColumn('string', 'Time (5 second bin)');
+    vis.addColumn('number', 'Not Subscriber');
+    vis.addColumn('number', 'Subscriber');
+
+    for (const [time, counts] of Object.entries(parsed_data)) {
+        vis.addRow([time, counts[0], counts[1]]);
+    }
+
+    var options = {
+        title: "Number of Subscriber vs not Subscriber messages per 5 seconds",
+        legend: {
+            position: "bottom"
+        }
+    };
+
+    var chart = new google.visualization.LineChart(document.getElementById('sub_or_not_messages_per_second'));
     chart.draw(vis, options);
 }
 

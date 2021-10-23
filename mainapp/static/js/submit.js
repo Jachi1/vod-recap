@@ -18,14 +18,15 @@ function empty() {
 
 
 function submit_url() {
+
     // Fetch input in #search-box DOM element
     url = $("#search-box").val();
     $("#search-contents").css("margin-top", "-2em");
     $(".loader").css("display", "block");
-    
+
     if (localStorage.getItem(String(url)) !== null) {
         $(".loader").css("display", "none");
-        create_visualizations(JSON.parse(localStorage.getItem(String(url))));
+        create_visualizations(JSON.parse(localStorage.getItem(String(url))));        
         return;
     }
 
@@ -61,6 +62,7 @@ function get_results(result, status, xhr) {
     localStorage.setItem(url, JSON.stringify(data));
     $(".loader").css("display", "none");                    // Remove spinner, then fill out visualization divs
     create_visualizations(data);                            // Function will create all the other visualizations
+
 }
 
 function failure(result) {
