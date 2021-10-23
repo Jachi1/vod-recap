@@ -5,6 +5,7 @@ function create_visualizations(chat_data) {
     // Insert all functions that create visualizations
     emote_messages_per_second_vis(chat_data, 30);
     messages_per_second_vis(chat_data, 30);
+    emote_or_not_messages_per_second_vis(chat_data, 30);
     sub_messages_per_second_vis(chat_data, 30);
     messages_per_user_vis(chat_data);
     emote_by_usage_vis(chat_data);
@@ -99,6 +100,59 @@ function messages_per_second_vis(chat_data, interval) {
     };
 
     var chart = new google.visualization.LineChart(document.getElementById('messages_per_second'));
+    chart.draw(vis, options);
+}
+
+
+
+function emote_or_not_messages_per_second_parse(chat, interval) {
+    // Function to parse the chat vod data into the proper format
+    if (!interval) {
+        return;
+    }
+
+    let current_position = 0;
+    var mps = {};
+    for (var msg = 0; msg < chat.length; msg++) {
+        tis = parseInt(chat[msg]["time_in_seconds"]);
+        let position = Math.floor(tis / interval);
+
+        while (current_position <= position) {
+            mps[current_position] = [0,0];
+            current_position++;
+        }
+
+        if (chat[msg]["is_emote"]) {
+            mps[position][1] = mps[position][1] + 1;
+        }
+        else{
+            mps[position][0] = mps[position][0] + 1;
+        }
+    }
+    return mps;
+}
+
+function emote_or_not_messages_per_second_vis(chat_data, interval) {
+    // Function to create the visualization, and insert the visualization into its respective <div>
+    var parsed_data = emote_or_not_messages_per_second_parse(chat_data, interval);
+    
+    var vis = new google.visualization.DataTable(); 
+    vis.addColumn('string', 'Time (5 second bin)');
+    vis.addColumn('number', 'Messages');
+    vis.addColumn('number', 'Emote Messages');
+
+    for (const [time, counts] of Object.entries(parsed_data)) {
+        vis.addRow([time, counts[0], counts[1]]);
+    }
+
+    var options = {
+        title: "Number of emote vs not emote messages per 5 seconds",
+        legend: {
+            position: "bottom"
+        }
+    };
+
+    var chart = new google.visualization.LineChart(document.getElementById('emote_or_not_messages_per_second'));
     chart.draw(vis, options);
 }
 
