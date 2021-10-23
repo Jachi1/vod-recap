@@ -51,7 +51,6 @@ function submit_url_to_api(url) {
 
 function get_results(result, status, xhr) {
     data = JSON.parse(JSON.stringify(result));
-    localStorage.setItem(url, JSON.stringify(data));
     if (data.hasOwnProperty("err")) {
         alert(data["err"]);
         $(".loader").css("display", "none");
@@ -59,6 +58,7 @@ function get_results(result, status, xhr) {
         return;
     }
 
+    localStorage.setItem(url, JSON.stringify(data));
     $(".loader").css("display", "none");                    // Remove spinner, then fill out visualization divs
     create_visualizations(data);                            // Function will create all the other visualizations
 }
