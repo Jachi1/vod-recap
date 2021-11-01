@@ -1,0 +1,75 @@
+{% extends "homepage/base.html" %}
+{% load static %}
+
+
+{% block title %}Home{% endblock %}
+
+{% block css %}
+<link rel="stylesheet" href="{% static 'css/index.css' %}">
+{% endblock %}
+
+{% block js %}
+<script src="{% static 'js/submit.js' %}"></script>
+<script src="{% static 'js/parser.js' %}"></script>
+{% endblock %}
+
+
+{% block content %}
+    <div id="search-div" class="container">
+        <div class="row">
+            <div class="col-4"></div>
+            <div id="search-contents" class="col-8">
+                <div class="input-group mb-3 w-50">
+                    <div class="input-group-prepend">
+                        <button class="btn btn-outline-primary" type="button" onclick="submit_url();">Fetch Metrics!</button>
+                    </div>
+                    <input id="search-box" type="text" class="form-control" maxlength="60" placeholder="Enter Twitch or YouTube VOD URL">
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container d-flex justify-content-center">
+        <div class="row">
+            <div class="col-4"></div>
+            <div class="col-4 loader" style="display: none;"></div>
+            <div class="col-4"></div>
+        </div>
+    </div>
+
+    <!-- All VOD information (On Visualization Success) Goes Here -->
+    <div class = "vod-data">
+
+    <!-- Twitch or Youtube Goes Here -->
+    <div id="vod-header" class="container d-flex justify-content-left">
+    </div>
+
+    <!-- Visualizations go in these divs -->
+    <div id="emote_messages_per_second" class="container d-flex justify-content-center visual">
+    </div>
+    
+    <div id="messages_per_second" class="container d-flex justify-content-center visual">
+    </div>
+
+    <div id="emote_or_not_messages_per_second" class="container d-flex justify-content-center visual">
+    </div>
+
+    <div id="sub_messages_per_second" class="container d-flex justify-content-center visual">
+    </div>
+
+    <div id="sub_or_not_messages_per_second" class="container d-flex justify-content-center visual">
+    </div>
+
+    <div id="messages_per_user" class="container d-flex justify-content-center visual">
+    </div>
+
+    <div id="emote_by_usage" class="container d-flex justify-content-center visual">
+    </div>
+
+    <div id="" class="container d-flex justify-content-center visual">
+    </div>
+
+    </div>
+
+    
+{% endblock %}
