@@ -26,7 +26,7 @@ function create_visualizations(chat_data) {
     document.getElementById("vod-header").innerHTML += 
         "<div id = \"vod-info\">" + 
         "Number of Messages: " + chat_data.length + "<br>" +
-        "Chat Length: " + chat_data[chat_data.length - 1]["time_stamp_in_vod"] + "<br>" + 
+        "VOD Length: " + chat_data[chat_data.length - 1]["time_stamp_in_vod"] + "<br>" + 
         "</div>";
 }
 
@@ -59,7 +59,7 @@ function emote_messages_per_second_vis(chat_data, interval) {
     var parsed_data = emote_messages_per_second_parse(chat_data, interval);
     
     var vis = new google.visualization.DataTable(); 
-    vis.addColumn('string', 'Time (5 second bin)');
+    vis.addColumn('string', `Time (${interval} second bin)`);
     vis.addColumn('number', 'Emote Messages');
 
     for (let msg = 0; msg < Object.keys(parsed_data).length; msg++) {
@@ -67,7 +67,7 @@ function emote_messages_per_second_vis(chat_data, interval) {
     }
 
     var options = {
-        title: "Number of emote messages per 5 seconds",
+        title: `Number of emote messages per ${interval} seconds`,
         legend: {
             position: "bottom"
         }
@@ -104,7 +104,7 @@ function messages_per_second_vis(chat_data, interval) {
     var parsed_data = messages_per_second_parse(chat_data, interval);
     
     var vis = new google.visualization.DataTable(); 
-    vis.addColumn('string', 'Time (5 second bin)');
+    vis.addColumn('string', `Time (${interval} second bin)`);
     vis.addColumn('number', 'Messages');
 
     for (let msg = 0; msg < Object.keys(parsed_data).length; msg++) {
@@ -112,7 +112,7 @@ function messages_per_second_vis(chat_data, interval) {
     }
 
     var options = {
-        title: "Number of messages per 5 seconds",
+        title: `Number of messages per ${interval} seconds`,
         legend: {
             position: "bottom"
         }
@@ -156,7 +156,7 @@ function emote_or_not_messages_per_second_vis(chat_data, interval) {
     var parsed_data = emote_or_not_messages_per_second_parse(chat_data, interval);
     
     var vis = new google.visualization.DataTable(); 
-    vis.addColumn('string', 'Time (5 second bin)');
+    vis.addColumn('string', `Time (${interval} second bin)`);
     vis.addColumn('number', 'Messages');
     vis.addColumn('number', 'Emote Messages');
 
@@ -165,7 +165,7 @@ function emote_or_not_messages_per_second_vis(chat_data, interval) {
     }
 
     var options = {
-        title: "Number of emote vs not emote messages per 5 seconds",
+        title: `Number of emote vs not emote messages per ${interval} seconds`,
         legend: {
             position: "bottom"
         }
@@ -204,7 +204,7 @@ function sub_messages_per_second_vis(chat_data, interval) {
     var parsed_data = sub_messages_per_second_parse(chat_data, interval);
     
     var vis = new google.visualization.DataTable(); 
-    vis.addColumn('string', 'Time (5 second bin)');
+    vis.addColumn('string', `Time (${interval} second bin)`);
     vis.addColumn('number', 'Subscriber Messages');
 
     for (let msg = 0; msg < Object.keys(parsed_data).length; msg++) {
@@ -212,7 +212,7 @@ function sub_messages_per_second_vis(chat_data, interval) {
     }
 
     var options = {
-        title: "Number of subscriber messages per 5 seconds",
+        title: `Number of subscriber messages per ${interval} seconds`,
         legend: {
             position: "bottom"
         }
@@ -256,7 +256,7 @@ function sub_or_not_messages_per_second_vis(chat_data, interval) {
     var parsed_data = sub_or_not_messages_per_second_parse(chat_data, interval);
     
     var vis = new google.visualization.DataTable(); 
-    vis.addColumn('string', 'Time (5 second bin)');
+    vis.addColumn('string', `Time (${interval} second bin)`);
     vis.addColumn('number', 'Not Subscriber');
     vis.addColumn('number', 'Subscriber');
 
@@ -265,7 +265,7 @@ function sub_or_not_messages_per_second_vis(chat_data, interval) {
     }
 
     var options = {
-        title: "Number of Subscriber vs not Subscriber messages per 5 seconds",
+        title: `Number of Subscriber vs non-Subscriber messages per ${interval} seconds`,
         legend: {
             position: "bottom"
         }
