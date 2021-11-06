@@ -20,7 +20,8 @@ function empty() {
 function submit_url() {
 
     // Fetch input in #search-box DOM element
-    url = $("#search-box").val();
+    let val = $("#search-box").val();
+    url = sanitize_string(val);
     $("#search-contents").css("margin-top", "-2em");
     $(".loader").css("display", "block");
 
@@ -31,18 +32,41 @@ function submit_url() {
     }
 
     // Submit query to API, play loading animation, reformat page to show visualizations
-    submit_url_to_api(url).then(
+    let domain = get_domain(url);
+    if (!domain) {
+        alert("The VOD must belong to Twitch or YouTube.");
+        return;
+    }
+
+    submit_url_to_api(domain, url).then(
         console.log("Fetching results...")
     );
 }
 
-function sanitize_url(url) {
-    return
+function sanitize_string(string) {
+    return string.replace(/[*+^${}()|[\]\\]/g, '\\$&');
 }
 
-function submit_url_to_api(url) {
+function get_domain(string) {
+    let domain = (new URL(string));
+    domain = domain.hostname.replace('www.', '').replace('.com', '').replace('.tv', '');
+    
+    if (!domain) {
+        return 0;
+    }
+    switch(domain) {
+        case "twitch":
+            return "twitch";
+        case "youtube":
+            return "youtube";
+        default:
+            return 0;
+    }
+}
+
+function submit_url_to_api(domain, url) {
     return $.ajax({
-        url: `${api_base_url}/twitch?url=${url}`,
+        url: `${api_base_url}/${domain}?url=${url}`,
         type: "GET",
         dataType: 'json',
         success: get_results,
