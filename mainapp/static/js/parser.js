@@ -43,6 +43,9 @@ function emote_messages_per_second_parse(chat, interval) {
     for (var msg = 0; msg < chat.length; msg++) {
         if (chat[msg]["is_emote"]) {
             tis = parseInt(chat[msg]["time_in_seconds"]);
+            if (tis < 0) {
+                continue;
+            }
             let position = Math.floor(tis / interval);
             while (current_position <= position) {
                 mps[current_position] = 0;
@@ -89,6 +92,9 @@ function messages_per_second_parse(chat, interval) {
     var mps = {};
     for (var msg = 0; msg < chat.length; msg++) {
         tis = parseInt(chat[msg]["time_in_seconds"]);
+        if (tis < 0) {
+            continue;
+        }
         let position = Math.floor(tis / interval);
         while (current_position <= position) {
             mps[current_position] = 0;
@@ -134,6 +140,9 @@ function emote_or_not_messages_per_second_parse(chat, interval) {
     var mps = {};
     for (var msg = 0; msg < chat.length; msg++) {
         tis = parseInt(chat[msg]["time_in_seconds"]);
+        if (tis < 0) {
+            continue;
+        }
         let position = Math.floor(tis / interval);
 
         while (current_position <= position) {
@@ -188,6 +197,9 @@ function sub_messages_per_second_parse(chat, interval) {
     for (var msg = 0; msg < chat.length; msg++) {
         if (chat[msg]["subscriber"]) {
             tis = parseInt(chat[msg]["time_in_seconds"]);
+            if (tis < 0) {
+                continue;
+            }
             let position = Math.floor(tis / interval);
             while (current_position <= position) {
                 mps[current_position] = 0;
@@ -234,6 +246,9 @@ function sub_or_not_messages_per_second_parse(chat, interval) {
     var mps = {};
     for (var msg = 0; msg < chat.length; msg++) {
         tis = parseInt(chat[msg]["time_in_seconds"]);
+        if (tis < 0) {
+            continue;
+        }
         let position = Math.floor(tis / interval);
 
         while (current_position <= position) {
