@@ -73,6 +73,9 @@ function emote_messages_per_second_vis(chat_data, interval) {
         title: `Number of emote messages per ${interval} seconds`,
         legend: {
             position: "bottom"
+        },
+        vAxis: {
+            title: "Number of Emote Messages"
         }
     };
 
@@ -121,6 +124,9 @@ function messages_per_second_vis(chat_data, interval) {
         title: `Number of messages per ${interval} seconds`,
         legend: {
             position: "bottom"
+        },
+        vAxis: {
+            title: "Number of Messages"
         }
     };
 
@@ -177,6 +183,9 @@ function emote_or_not_messages_per_second_vis(chat_data, interval) {
         title: `Number of emote vs not emote messages per ${interval} seconds`,
         legend: {
             position: "bottom"
+        },
+        vAxis: {
+            title: "Number of Messages"
         }
     };
 
@@ -227,6 +236,9 @@ function sub_messages_per_second_vis(chat_data, interval) {
         title: `Number of subscriber messages per ${interval} seconds`,
         legend: {
             position: "bottom"
+        },
+        vAxis: {
+            title: "Number of Subscriber Messages"
         }
     };
 
@@ -283,6 +295,9 @@ function sub_or_not_messages_per_second_vis(chat_data, interval) {
         title: `Number of Subscriber vs non-Subscriber messages per ${interval} seconds`,
         legend: {
             position: "bottom"
+        },
+        vAxis: {
+            title: "Number of Messages"
         }
     };
 
@@ -326,7 +341,7 @@ function messages_per_user_vis(chat_data) {
         }
     };
 
-    var chart = new google.visualization.PieChart(document.getElementById('messages_per_user'));
+    var chart = new google.visualization.BarChart(document.getElementById('messages_per_user'));
     chart.draw(vis, options);
 }
 
@@ -364,9 +379,12 @@ function emote_by_usage_vis(chat_data) {
     }
 
     var options = {
-        title: "Usage for Each Emote during a VOD",
+        title: "Emote Usage",
         legend: {
             position: "bottom"
+        },
+        vAxis: {
+            title: "Number of Times Emote Was Used"
         }
     };
 
