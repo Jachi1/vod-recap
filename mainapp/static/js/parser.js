@@ -83,7 +83,6 @@ function number_of_specific_emotes_parse(chat, interval) {
     }
     
     var emotes = create_bins(interval, chat);
-    console.log("Emotes:", emotes);
 
     var next_bin = 1;
     for (var msg = 0; msg < chat.length; msg++) {
@@ -103,7 +102,6 @@ function number_of_specific_emotes_parse(chat, interval) {
             }
         }
     }
-    console.log("Emotes again:", emotes);
     return emotes;
 }
 
@@ -111,7 +109,6 @@ function number_of_specific_emotes(chat_data, interval) {
     // Function to create the visualization, and insert the visualization into its respective <div>
     var parsed_data = number_of_specific_emotes_parse(chat_data, interval);
     
-    console.log("parsed data:", parsed_data);
     var vis = new google.visualization.DataTable(); 
     vis.addColumn('string', `Time (${interval} second bin)`);
     vis.addColumn('number', 'Reaction Emote Messages');
