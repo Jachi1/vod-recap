@@ -86,7 +86,11 @@ function get_results(result, status, xhr) {
         return;
     }
 
-    localStorage.setItem(url, JSON.stringify(data));
+    try {
+        localStorage.setItem(url, JSON.stringify(data));
+    } catch (error) {
+        console.log("Local storage is full.");
+    }
     $(".loader").css("display", "none");                    // Remove spinner, then fill out visualization divs
     create_visualizations(data);                            // Function will create all the other visualizations
 
