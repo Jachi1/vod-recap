@@ -21,7 +21,7 @@ function submit_url() {
 
     // Fetch input in #search-box DOM element
     let val = $("#search-box").val();
-    url = sanitize_string(val);
+    url = sanitize_string(val).trim();
     $("#search-contents").css("margin-top", "-2em");
     $(".loader").css("display", "block");
 
@@ -33,8 +33,8 @@ function submit_url() {
 
     // Submit query to API, play loading animation, reformat page to show visualizations
     let domain = get_domain(url);
-    if (!domain) {
-        alert("The VOD must belong to Twitch or YouTube.");
+    if (domain < 0) {
+        alert("The VOD URL must belong to Twitch or YouTube.");
         return;
     }
 
@@ -48,19 +48,22 @@ function sanitize_string(string) {
 }
 
 function get_domain(string) {
-    let domain = (new URL(string));
-    domain = domain.hostname.replace('www.', '').replace('.com', '').replace('.tv', '');
-    
-    if (!domain) {
-        return 0;
+    let domain = '';
+    try {
+        domain = (new URL(string));
+        domain = domain.hostname.replace('www.', '').replace('.com', '').replace('.tv', '');
+    } catch (error) {
+        $(".loader").css("display", "none");
+        return -1;
     }
+    
     switch(domain) {
         case "twitch":
             return "twitch";
         case "youtube":
             return "youtube";
         default:
-            return 0;
+            return -1;
     }
 }
 
