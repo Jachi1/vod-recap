@@ -10,6 +10,7 @@ function create_visualizations(chat_data) {
     sub_or_not_messages_per_second_vis(chat_data, 30);
     messages_per_user_vis(chat_data);
     emote_by_usage_vis(chat_data);
+    number_of_specific_emotes(chat_data, 30);    
 
     // Print header-bar to display VOD header information
     if (url.substr(12, 6) == "twitch"){
@@ -30,6 +31,110 @@ function create_visualizations(chat_data) {
         "</div>";
 }
 
+function seconds_to_hours_min_sec(num) {
+    let val = parseInt(num);
+    let hours = 0;
+    let min = 0;
+    let sec = 0;
+    hours = Math.floor(val / 216000);
+    min = Math.floor(val / 60);
+    sec = val % 60;
+    hours = hours.toString().padStart(2, '0');
+    min = min.toString().padStart(2, '0');
+    sec = sec.toString().padStart(2, '0');
+    var hms = `${hours}h${min}m${sec}s`;
+    return hms;
+}
+
+function create_bins(interval, chat) {
+    var bins = {};
+    bins[seconds_to_hours_min_sec(0)] = 0;
+    let last_timestamp = chat[chat.length-1]["time_in_seconds"];
+    let itr = 1;
+    let counter = 1;
+    while (itr <= last_timestamp) {
+        key = interval * counter;
+        bins[seconds_to_hours_min_sec(key)] = 0;
+        itr += interval;
+        counter += 1;
+    }
+    return bins;
+}
+
+function create_bins_compare(interval, chat) {
+    var bins = {};
+    bins[seconds_to_hours_min_sec(0)] = [0,0];
+    var last_timestamp = chat[chat.length-1]["time_in_seconds"];
+    let itr = 1;
+    let counter = 1;
+    while (itr <= last_timestamp) {
+        key = interval * counter;
+        key_conv = seconds_to_hours_min_sec(key);
+        bins[key_conv] = [0,0];
+        itr += interval;
+        counter++;
+    }
+    return bins;
+}
+
+function number_of_specific_emotes_parse(chat, interval) {
+    if (interval < 1) {
+        return;
+    }
+    
+    var emotes = create_bins(interval, chat);
+    console.log("Emotes:", emotes);
+
+    var next_bin = 1;
+    for (var msg = 0; msg < chat.length; msg++) {
+        let tis = chat[msg]["time_in_seconds"];
+        if (tis < 0) {
+            continue;
+        }
+        if (tis <= (interval * next_bin)) {
+            if (chat[msg]["message"].includes("Pog") || chat[msg]["message"].includes("POGGERS") || chat[msg]["message"].includes("LULW") || chat[msg]["message"].includes("LUL")) { 
+                emotes[seconds_to_hours_min_sec(interval * next_bin)]++;
+            }
+        }
+        else {
+            next_bin++;
+            if (chat[msg]["message"].includes("Pog") || chat[msg]["message"].includes("POGGERS") || chat[msg]["message"].includes("LULW") || chat[msg]["message"].includes("LUL")) { 
+                emotes[seconds_to_hours_min_sec(interval * next_bin)]++;
+            }
+        }
+    }
+    console.log("Emotes again:", emotes);
+    return emotes;
+}
+
+function number_of_specific_emotes(chat_data, interval) {
+    // Function to create the visualization, and insert the visualization into its respective <div>
+    var parsed_data = number_of_specific_emotes_parse(chat_data, interval);
+    
+    console.log("parsed data:", parsed_data);
+    var vis = new google.visualization.DataTable(); 
+    vis.addColumn('string', `Time (${interval} second bin)`);
+    vis.addColumn('number', 'Reaction Emote Messages');
+    // vis.addColumn({type:'string', role:'annotationText'});
+
+    for (let msg = 0; msg < Object.keys(parsed_data).length; msg++) {
+        let key = seconds_to_hours_min_sec(msg * interval);
+        vis.addRow([key, parsed_data[key]]);
+    }
+
+    var options = {
+        title: `Number of "Funny" Reaction messages per ${interval} seconds`,
+        legend: {
+            position: "bottom"
+        },
+        vAxis: {
+            title: "Number of Emote Messages"
+        }
+    };
+
+    var chart = new google.visualization.LineChart(document.getElementById('pog'));
+    chart.draw(vis, options);
+}
 
 
 function emote_messages_per_second_parse(chat, interval) {
