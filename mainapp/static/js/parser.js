@@ -33,17 +33,9 @@ function create_visualizations(chat_data) {
 
 function seconds_to_hours_min_sec(num) {
     let val = parseInt(num);
-    let hours = 0;
-    let min = 0;
-    let sec = 0;
-    hours = Math.floor(val / 216000);
-    min = Math.floor(val / 60);
-    sec = val % 60;
-    hours = hours.toString().padStart(2, '0');
-    min = min.toString().padStart(2, '0');
-    sec = sec.toString().padStart(2, '0');
-    var hms = `${hours}h${min}m${sec}s`;
-    return hms;
+    var date = new Date(val * 1000).toISOString().substr(11, 8).replace(':', 'h').replace(':', 'm');
+    date += 's';
+    return date;
 }
 
 function create_bins(interval, chat) {
