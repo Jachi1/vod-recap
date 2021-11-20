@@ -10,7 +10,7 @@ function create_visualizations(chat_data) {
     sub_or_not_messages_per_second_vis(chat_data, 30);
     messages_per_user_vis(chat_data);
     emote_by_usage_vis(chat_data);
-    number_of_specific_emotes(chat_data, 30);    
+    number_of_specific_emotes(chat_data, 30);
 
     // Print header-bar to display VOD header information
     if (url.substr(12, 6) == "twitch"){
@@ -100,29 +100,87 @@ function number_of_specific_emotes_parse(chat, interval) {
 function number_of_specific_emotes(chat_data, interval) {
     // Function to create the visualization, and insert the visualization into its respective <div>
     var parsed_data = number_of_specific_emotes_parse(chat_data, interval);
-    
-    var vis = new google.visualization.DataTable(); 
-    vis.addColumn('string', `Time (${interval} second bin)`);
-    vis.addColumn('number', 'Reaction Emote Messages');
-    // vis.addColumn({type:'string', role:'annotationText'});
-
-    for (let msg = 0; msg < Object.keys(parsed_data).length; msg++) {
-        let key = seconds_to_hours_min_sec(msg * interval);
-        vis.addRow([key, parsed_data[key]]);
-    }
-
+    var values = $.map(parsed_data, function(value, key) { return value });
+    var keys = $.map(parsed_data, function(value, key) { return key });
+    var max = 0;
+    values.map(d => {
+        max = Math.max(max, d)
+    });
+      
+    // reduce height, then make the rest of the visualizations based off of apex charts
     var options = {
-        title: `Number of "Funny" Reaction messages per ${interval} seconds`,
-        legend: {
-            position: "bottom"
+        title: {
+            text: `Number of Funny Emotes Used per ${interval} Seconds`,
+            align: 'center'
         },
-        vAxis: {
-            title: "Number of Emote Messages"
+        chart: {
+            type: 'line',
+            height: 'auto',
+            events: {
+                markerClick: function(event, chartContext, { seriesIndex, dataPointIndex, config}) {
+                    let vod_timestamp = `${url}?t=${seconds_to_hours_min_sec(dataPointIndex * interval)}`;
+                    window.open(vod_timestamp, '_blank').focus();
+                }
+            },
+            animations: {
+                enabled: true,
+                easing: 'easeinout',
+                speed: 800,
+                animateGradually: {
+                    enabled: true,
+                    delay: 150
+                },
+                dynamicAnimation: {
+                    enabled: true,
+                    speed: 350
+                }
+            },
+            redrawOnWindowResize: true
+        },
+        series: [
+            {
+                name: 'Number of messages',
+                data: values
+            }
+        ],
+        stroke: {
+            width: 2
+        },
+        fill: {
+            type: 'gradient'
+        },
+        plotOptions: {
+            bar: {
+                columnWidth: "20%"
+            }
+        },
+        xaxis: {
+            categories: keys,
+            title: {
+                text: "Timestamp in VOD"
+            },
+            tickAmount: Math.ceil(values.length / 10)
+        },
+        yaxis: {
+            min: 0,
+            max: max + 5,
+            axisBorder: {
+                show: true
+            },
+            axisTicks: {
+                show: true
+            },
+            title: {
+                text: "Number of messages sent that contain specified emotes"
+            }
+        },
+        tooltip: {
+            enabled: true
         }
-    };
-
-    var chart = new google.visualization.LineChart(document.getElementById('pog'));
-    chart.draw(vis, options);
+      }
+      
+      var chart = new ApexCharts(document.querySelector("#funny_emotes"), options);
+      chart.render();
 }
 
 
