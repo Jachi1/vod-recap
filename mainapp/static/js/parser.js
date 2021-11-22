@@ -135,7 +135,9 @@ function number_of_specific_emotes(chat_data, interval) {
                     speed: 350
                 }
             },
-            redrawOnWindowResize: true
+            redrawOnWindowResize: true,
+            background: '#343a40',
+            foreColor: '#fff'
         },
         series: [
             {
@@ -146,9 +148,6 @@ function number_of_specific_emotes(chat_data, interval) {
         stroke: {
             width: 2
         },
-        fill: {
-            type: 'gradient'
-        },
         plotOptions: {
             bar: {
                 columnWidth: "20%"
@@ -157,7 +156,8 @@ function number_of_specific_emotes(chat_data, interval) {
         xaxis: {
             categories: keys,
             title: {
-                text: "Timestamp in VOD"
+                text: "Timestamp in VOD",
+                offsetY: -20
             },
             tickAmount: Math.ceil(keys.length / 10)
         },
@@ -251,7 +251,9 @@ function emote_messages_per_second_vis(chat_data, interval) {
                     speed: 350
                 }
             },
-            redrawOnWindowResize: true
+            redrawOnWindowResize: true,
+            background: '#343a40',
+            foreColor: '#fff'
         },
         series: [
             {
@@ -262,9 +264,6 @@ function emote_messages_per_second_vis(chat_data, interval) {
         stroke: {
             width: 2
         },
-        fill: {
-            type: 'gradient'
-        },
         plotOptions: {
             bar: {
                 columnWidth: "20%"
@@ -273,7 +272,8 @@ function emote_messages_per_second_vis(chat_data, interval) {
         xaxis: {
             categories: keys,
             title: {
-                text: "Timestamp in VOD"
+                text: "Timestamp in VOD",
+                offsetY: -20
             },
             tickAmount: Math.ceil(keys.length / 10)
         },
@@ -364,7 +364,9 @@ function messages_per_second_vis(chat_data, interval) {
                     speed: 350
                 }
             },
-            redrawOnWindowResize: true
+            redrawOnWindowResize: true,
+            background: '#343a40',
+            foreColor: '#fff'
         },
         series: [
             {
@@ -375,9 +377,6 @@ function messages_per_second_vis(chat_data, interval) {
         stroke: {
             width: 2
         },
-        fill: {
-            type: 'gradient'
-        },
         plotOptions: {
             bar: {
                 columnWidth: "20%"
@@ -386,7 +385,8 @@ function messages_per_second_vis(chat_data, interval) {
         xaxis: {
             categories: keys,
             title: {
-                text: "Timestamp in VOD"
+                text: "Timestamp in VOD",
+                offsetY: -20
             },
             tickAmount: Math.ceil(keys.length / 10)
         },
@@ -502,7 +502,9 @@ function emote_or_not_messages_per_second_vis(chat_data, interval) {
                     speed: 350
                 }
             },
-            redrawOnWindowResize: true
+            redrawOnWindowResize: true,
+            background: '#343a40',
+            foreColor: '#fff'
         },
         series: [
             {
@@ -517,9 +519,6 @@ function emote_or_not_messages_per_second_vis(chat_data, interval) {
         stroke: {
             width: 2
         },
-        fill: {
-            type: 'gradient'
-        },
         plotOptions: {
             bar: {
                 columnWidth: "20%"
@@ -528,7 +527,8 @@ function emote_or_not_messages_per_second_vis(chat_data, interval) {
         xaxis: {
             categories: keys,
             title: {
-                text: "Timestamp in VOD"
+                text: "Timestamp in VOD",
+                offsetY: -20
             },
             tickAmount: Math.ceil(keys.length / 10)
         },
@@ -623,7 +623,9 @@ function sub_messages_per_second_vis(chat_data, interval) {
                     speed: 350
                 }
             },
-            redrawOnWindowResize: true
+            redrawOnWindowResize: true,
+            background: '#343a40',
+            foreColor: '#fff'
         },
         series: [
             {
@@ -634,9 +636,6 @@ function sub_messages_per_second_vis(chat_data, interval) {
         stroke: {
             width: 2
         },
-        fill: {
-            type: 'gradient'
-        },
         plotOptions: {
             bar: {
                 columnWidth: "20%"
@@ -645,7 +644,8 @@ function sub_messages_per_second_vis(chat_data, interval) {
         xaxis: {
             categories: keys,
             title: {
-                text: "Timestamp in VOD"
+                text: "Timestamp in VOD",
+                offsetY: -20
             },
             tickAmount: Math.ceil(values.length / 10)
         },
@@ -761,7 +761,9 @@ function sub_or_not_messages_per_second_vis(chat_data, interval) {
                     speed: 350
                 }
             },
-            redrawOnWindowResize: true
+            redrawOnWindowResize: true,
+            background: '#343a40',
+            foreColor: '#fff'
         },
         series: [
             {
@@ -776,9 +778,6 @@ function sub_or_not_messages_per_second_vis(chat_data, interval) {
         stroke: {
             width: 2
         },
-        fill: {
-            type: 'gradient'
-        },
         plotOptions: {
             bar: {
                 columnWidth: "20%"
@@ -787,7 +786,8 @@ function sub_or_not_messages_per_second_vis(chat_data, interval) {
         xaxis: {
             categories: keys,
             title: {
-                text: "Timestamp in VOD"
+                text: "Timestamp in VOD",
+                offsetY: -20
             },
             tickAmount: Math.ceil(keys.length / 10)
         },
@@ -875,7 +875,9 @@ function messages_per_user_vis(chat_data, num_users) {
                     speed: 350
                 }
             },
-            redrawOnWindowResize: true
+            redrawOnWindowResize: true,
+            background: '#343a40',
+            foreColor: '#fff'
         },
         series: [
             {
@@ -988,7 +990,9 @@ function emote_by_usage_vis(chat_data, num_emotes) {
                     speed: 350
                 }
             },
-            redrawOnWindowResize: true
+            redrawOnWindowResize: true,
+            background: '#343a40',
+            foreColor: '#fff'
         },
         series: [
             {
