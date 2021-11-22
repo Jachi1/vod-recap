@@ -8,8 +8,8 @@ function create_visualizations(chat_data) {
     emote_or_not_messages_per_second_vis(chat_data, 30);
     sub_messages_per_second_vis(chat_data, 30);
     sub_or_not_messages_per_second_vis(chat_data, 30);
-    messages_per_user_vis(chat_data);
-    emote_by_usage_vis(chat_data);
+    messages_per_user_vis(chat_data, 10);
+    emote_by_usage_vis(chat_data, 10);
     number_of_specific_emotes(chat_data, 30);
 
     // Print header-bar to display VOD header information
@@ -159,7 +159,7 @@ function number_of_specific_emotes(chat_data, interval) {
             title: {
                 text: "Timestamp in VOD"
             },
-            tickAmount: Math.ceil(values.length / 10)
+            tickAmount: Math.ceil(keys.length / 10)
         },
         yaxis: {
             min: 0,
@@ -212,27 +212,87 @@ function emote_messages_per_second_parse(chat, interval) {
 function emote_messages_per_second_vis(chat_data, interval) {
     // Function to create the visualization, and insert the visualization into its respective <div>
     var parsed_data = emote_messages_per_second_parse(chat_data, interval);
-    
-    var vis = new google.visualization.DataTable(); 
-    vis.addColumn('string', `Time (${interval} second bin)`);
-    vis.addColumn('number', 'Emote Messages');
-
-    for (let msg = 0; msg < Object.keys(parsed_data).length; msg++) {
-        vis.addRow([String(msg), parsed_data[msg]]);
-    }
-
+    var values = $.map(parsed_data, function(value, key) { return value });
+    var keys = $.map(parsed_data, function(value, key) { return key });
+    var max = 0;
+    values.map(d => {
+        max = Math.max(max, d)
+    });
+      
+    // reduce height, then make the rest of the visualizations based off of apex charts
     var options = {
-        title: `Number of emote messages per ${interval} seconds`,
-        legend: {
-            position: "bottom"
+        title: {
+            text: `Emote Messages per ${interval} Seconds`,
+            align: 'center'
         },
-        vAxis: {
-            title: "Number of Emote Messages"
+        chart: {
+            type: 'line',
+            height: 'auto',
+            events: {
+                markerClick: function(event, chartContext, { seriesIndex, dataPointIndex, config}) {
+                    let vod_timestamp = `${url}?t=${seconds_to_hours_min_sec(dataPointIndex * interval)}`;
+                    window.open(vod_timestamp, '_blank').focus();
+                }
+            },
+            animations: {
+                enabled: true,
+                easing: 'easeinout',
+                speed: 800,
+                animateGradually: {
+                    enabled: true,
+                    delay: 150
+                },
+                dynamicAnimation: {
+                    enabled: true,
+                    speed: 350
+                }
+            },
+            redrawOnWindowResize: true
+        },
+        series: [
+            {
+                name: 'Number of Emote Messages',
+                data: values
+            }
+        ],
+        stroke: {
+            width: 2
+        },
+        fill: {
+            type: 'gradient'
+        },
+        plotOptions: {
+            bar: {
+                columnWidth: "20%"
+            }
+        },
+        xaxis: {
+            categories: keys,
+            title: {
+                text: "Timestamp in VOD"
+            },
+            tickAmount: Math.ceil(keys.length / 10)
+        },
+        yaxis: {
+            min: 0,
+            max: max + 5,
+            axisBorder: {
+                show: true
+            },
+            axisTicks: {
+                show: true
+            },
+            title: {
+                text: "Number of messages sent that contain emotes"
+            }
+        },
+        tooltip: {
+            enabled: true
         }
-    };
-
-    var chart = new google.visualization.LineChart(document.getElementById('emote_messages_per_second'));
-    chart.draw(vis, options);
+      }
+      
+      var chart = new ApexCharts(document.querySelector("#emote_messages_per_second"), options);
+      chart.render();
 }
 
 
@@ -263,27 +323,87 @@ function messages_per_second_parse(chat, interval) {
 function messages_per_second_vis(chat_data, interval) {
     // Function to create the visualization, and insert the visualization into its respective <div>
     var parsed_data = messages_per_second_parse(chat_data, interval);
-    
-    var vis = new google.visualization.DataTable(); 
-    vis.addColumn('string', `Time (${interval} second bin)`);
-    vis.addColumn('number', 'Messages');
-
-    for (let msg = 0; msg < Object.keys(parsed_data).length; msg++) {
-        vis.addRow([String(msg), parsed_data[msg]]);
-    }
-
+    var values = $.map(parsed_data, function(value, key) { return value });
+    var keys = $.map(parsed_data, function(value, key) { return key });
+    var max = 0;
+    values.map(d => {
+        max = Math.max(max, d)
+    });
+      
+    // reduce height, then make the rest of the visualizations based off of apex charts
     var options = {
-        title: `Number of messages per ${interval} seconds`,
-        legend: {
-            position: "bottom"
+        title: {
+            text: `Messages per ${interval} Seconds`,
+            align: 'center'
         },
-        vAxis: {
-            title: "Number of Messages"
+        chart: {
+            type: 'line',
+            height: 'auto',
+            events: {
+                markerClick: function(event, chartContext, { seriesIndex, dataPointIndex, config}) {
+                    let vod_timestamp = `${url}?t=${seconds_to_hours_min_sec(dataPointIndex * interval)}`;
+                    window.open(vod_timestamp, '_blank').focus();
+                }
+            },
+            animations: {
+                enabled: true,
+                easing: 'easeinout',
+                speed: 800,
+                animateGradually: {
+                    enabled: true,
+                    delay: 150
+                },
+                dynamicAnimation: {
+                    enabled: true,
+                    speed: 350
+                }
+            },
+            redrawOnWindowResize: true
+        },
+        series: [
+            {
+                name: 'Number of Messages',
+                data: values
+            }
+        ],
+        stroke: {
+            width: 2
+        },
+        fill: {
+            type: 'gradient'
+        },
+        plotOptions: {
+            bar: {
+                columnWidth: "20%"
+            }
+        },
+        xaxis: {
+            categories: keys,
+            title: {
+                text: "Timestamp in VOD"
+            },
+            tickAmount: Math.ceil(keys.length / 10)
+        },
+        yaxis: {
+            min: 0,
+            max: max + 5,
+            axisBorder: {
+                show: true
+            },
+            axisTicks: {
+                show: true
+            },
+            title: {
+                text: "Number of messages sent"
+            }
+        },
+        tooltip: {
+            enabled: true
         }
-    };
-
-    var chart = new google.visualization.LineChart(document.getElementById('messages_per_second'));
-    chart.draw(vis, options);
+      }
+      
+      var chart = new ApexCharts(document.querySelector("#messages_per_second"), options);
+      chart.render();
 }
 
 
@@ -321,28 +441,99 @@ function emote_or_not_messages_per_second_parse(chat, interval) {
 function emote_or_not_messages_per_second_vis(chat_data, interval) {
     // Function to create the visualization, and insert the visualization into its respective <div>
     var parsed_data = emote_or_not_messages_per_second_parse(chat_data, interval);
+    var emote_values = $.map(parsed_data, function(value, key) { return value[1] });
+    var msg_values = $.map(parsed_data, function(value, key) { return value[0] });
+    var keys = $.map(parsed_data, function(value, key) { return key });
     
-    var vis = new google.visualization.DataTable(); 
-    vis.addColumn('string', `Time (${interval} second bin)`);
-    vis.addColumn('number', 'Messages');
-    vis.addColumn('number', 'Emote Messages');
-
-    for (const [time, counts] of Object.entries(parsed_data)) {
-        vis.addRow([time, counts[0], counts[1]]);
-    }
-
+    var emote_max = 0;
+    var msg_max = 0;
+    var max = 0;
+    emote_values.map(d => {
+        emote_max = Math.max(emote_max, d)
+    });
+    msg_values.map(d => {
+        msg_max = Math.max(msg_max, d)
+    });
+    max = Math.max(emote_max, msg_max);
+    
+    // reduce height, then make the rest of the visualizations based off of apex charts
     var options = {
-        title: `Number of emote vs not emote messages per ${interval} seconds`,
-        legend: {
-            position: "bottom"
+        title: {
+            text: `Emotes Vs. Messages per ${interval} Seconds`,
+            align: 'center'
         },
-        vAxis: {
-            title: "Number of Messages"
+        chart: {
+            type: 'line',
+            height: 'auto',
+            events: {
+                markerClick: function(event, chartContext, { seriesIndex, dataPointIndex, config}) {
+                    let vod_timestamp = `${url}?t=${seconds_to_hours_min_sec(dataPointIndex * interval)}`;
+                    window.open(vod_timestamp, '_blank').focus();
+                }
+            },
+            animations: {
+                enabled: true,
+                easing: 'easeinout',
+                speed: 800,
+                animateGradually: {
+                    enabled: true,
+                    delay: 150
+                },
+                dynamicAnimation: {
+                    enabled: true,
+                    speed: 350
+                }
+            },
+            redrawOnWindowResize: true
+        },
+        series: [
+            {
+                name: 'Number of Messages',
+                data: msg_values
+            },
+            {
+                name: 'Number of Emote Messages',
+                data: emote_values
+            }
+        ],
+        stroke: {
+            width: 2
+        },
+        fill: {
+            type: 'gradient'
+        },
+        plotOptions: {
+            bar: {
+                columnWidth: "20%"
+            }
+        },
+        xaxis: {
+            categories: keys,
+            title: {
+                text: "Timestamp in VOD"
+            },
+            tickAmount: Math.ceil(keys.length / 10)
+        },
+        yaxis: {
+            min: 0,
+            max: max + 5,
+            axisBorder: {
+                show: true
+            },
+            axisTicks: {
+                show: true
+            },
+            title: {
+                text: "Number of messages sent"
+            }
+        },
+        tooltip: {
+            enabled: true
         }
-    };
-
-    var chart = new google.visualization.LineChart(document.getElementById('emote_or_not_messages_per_second'));
-    chart.draw(vis, options);
+      }
+      
+      var chart = new ApexCharts(document.querySelector("#emote_or_not_messages_per_second"), options);
+      chart.render();
 }
 
 
@@ -375,27 +566,87 @@ function sub_messages_per_second_parse(chat, interval) {
 function sub_messages_per_second_vis(chat_data, interval) {
     // Function to create the visualization, and insert the visualization into its respective <div>
     var parsed_data = sub_messages_per_second_parse(chat_data, interval);
-    
-    var vis = new google.visualization.DataTable(); 
-    vis.addColumn('string', `Time (${interval} second bin)`);
-    vis.addColumn('number', 'Subscriber Messages');
-
-    for (let msg = 0; msg < Object.keys(parsed_data).length; msg++) {
-        vis.addRow([String(msg), parsed_data[msg]]);
-    }
-
+    var values = $.map(parsed_data, function(value, key) { return value });
+    var keys = $.map(parsed_data, function(value, key) { return key });
+    var max = 0;
+    values.map(d => {
+        max = Math.max(max, d)
+    });
+      
+    // reduce height, then make the rest of the visualizations based off of apex charts
     var options = {
-        title: `Number of subscriber messages per ${interval} seconds`,
-        legend: {
-            position: "bottom"
+        title: {
+            text: `Subscriber Messages per ${interval} Seconds`,
+            align: 'center'
         },
-        vAxis: {
-            title: "Number of Subscriber Messages"
+        chart: {
+            type: 'line',
+            height: 'auto',
+            events: {
+                markerClick: function(event, chartContext, { seriesIndex, dataPointIndex, config}) {
+                    let vod_timestamp = `${url}?t=${seconds_to_hours_min_sec(dataPointIndex * interval)}`;
+                    window.open(vod_timestamp, '_blank').focus();
+                }
+            },
+            animations: {
+                enabled: true,
+                easing: 'easeinout',
+                speed: 800,
+                animateGradually: {
+                    enabled: true,
+                    delay: 150
+                },
+                dynamicAnimation: {
+                    enabled: true,
+                    speed: 350
+                }
+            },
+            redrawOnWindowResize: true
+        },
+        series: [
+            {
+                name: 'Number of Messages',
+                data: values
+            }
+        ],
+        stroke: {
+            width: 2
+        },
+        fill: {
+            type: 'gradient'
+        },
+        plotOptions: {
+            bar: {
+                columnWidth: "20%"
+            }
+        },
+        xaxis: {
+            categories: keys,
+            title: {
+                text: "Timestamp in VOD"
+            },
+            tickAmount: Math.ceil(values.length / 10)
+        },
+        yaxis: {
+            min: 0,
+            max: max + 5,
+            axisBorder: {
+                show: true
+            },
+            axisTicks: {
+                show: true
+            },
+            title: {
+                text: "Number of messages sent"
+            }
+        },
+        tooltip: {
+            enabled: true
         }
-    };
-
-    var chart = new google.visualization.LineChart(document.getElementById('sub_messages_per_second'));
-    chart.draw(vis, options);
+      }
+      
+      var chart = new ApexCharts(document.querySelector("#sub_messages_per_second"), options);
+      chart.render();
 }
 
 
@@ -433,28 +684,99 @@ function sub_or_not_messages_per_second_parse(chat, interval) {
 function sub_or_not_messages_per_second_vis(chat_data, interval) {
     // Function to create the visualization, and insert the visualization into its respective <div>
     var parsed_data = sub_or_not_messages_per_second_parse(chat_data, interval);
+    var sub_values = $.map(parsed_data, function(value, key) { return value[1] });
+    var non_sub_values = $.map(parsed_data, function(value, key) { return value[0] });
+    var keys = $.map(parsed_data, function(value, key) { return key });
     
-    var vis = new google.visualization.DataTable(); 
-    vis.addColumn('string', `Time (${interval} second bin)`);
-    vis.addColumn('number', 'Not Subscriber');
-    vis.addColumn('number', 'Subscriber');
-
-    for (const [time, counts] of Object.entries(parsed_data)) {
-        vis.addRow([time, counts[0], counts[1]]);
-    }
-
+    var sub_max = 0;
+    var non_sub_max = 0;
+    var max = 0;
+    sub_values.map(d => {
+        sub_max = Math.max(sub_max, d)
+    });
+    non_sub_values.map(d => {
+        non_sub_max = Math.max(non_sub_max, d)
+    });
+    max = Math.max(sub_max, non_sub_max);
+      
+    // reduce height, then make the rest of the visualizations based off of apex charts
     var options = {
-        title: `Number of Subscriber vs non-Subscriber messages per ${interval} seconds`,
-        legend: {
-            position: "bottom"
+        title: {
+            text: `Subscriber Vs. Non-subscriber Messages per ${interval} Seconds`,
+            align: 'center'
         },
-        vAxis: {
-            title: "Number of Messages"
+        chart: {
+            type: 'line',
+            height: 'auto',
+            events: {
+                markerClick: function(event, chartContext, { seriesIndex, dataPointIndex, config}) {
+                    let vod_timestamp = `${url}?t=${seconds_to_hours_min_sec(dataPointIndex * interval)}`;
+                    window.open(vod_timestamp, '_blank').focus();
+                }
+            },
+            animations: {
+                enabled: true,
+                easing: 'easeinout',
+                speed: 800,
+                animateGradually: {
+                    enabled: true,
+                    delay: 150
+                },
+                dynamicAnimation: {
+                    enabled: true,
+                    speed: 350
+                }
+            },
+            redrawOnWindowResize: true
+        },
+        series: [
+            {
+                name: 'Number of Non-Subscriber Messages',
+                data: non_sub_values
+            },
+            {
+                name: 'Number of Subscriber Messages',
+                data: sub_values
+            }
+        ],
+        stroke: {
+            width: 2
+        },
+        fill: {
+            type: 'gradient'
+        },
+        plotOptions: {
+            bar: {
+                columnWidth: "20%"
+            }
+        },
+        xaxis: {
+            categories: keys,
+            title: {
+                text: "Timestamp in VOD"
+            },
+            tickAmount: Math.ceil(keys.length / 10)
+        },
+        yaxis: {
+            min: 0,
+            max: max + 5,
+            axisBorder: {
+                show: true
+            },
+            axisTicks: {
+                show: true
+            },
+            title: {
+                text: "Number of messages sent"
+            }
+        },
+        tooltip: {
+            enabled: true
         }
-    };
-
-    var chart = new google.visualization.LineChart(document.getElementById('sub_or_not_messages_per_second'));
-    chart.draw(vis, options);
+      }
+      
+      var chart = new ApexCharts(document.querySelector("#sub_or_not_messages_per_second"), options);
+      chart.render();
 }
 
 
@@ -474,27 +796,96 @@ function messages_per_user_parse(chat) {
     return mpu;
 }
 
-function messages_per_user_vis(chat_data) {
+function messages_per_user_vis(chat_data, num_users) {
     // Function to create the visualization, and insert the visualization into its respective <div>
     var parsed_data = messages_per_user_parse(chat_data);
+    var keys = $.map(parsed_data, function(value, key) { return key });
     
-    var vis = new google.visualization.DataTable(); 
-    vis.addColumn('string', 'User');
-    vis.addColumn('number', 'Messages');
+    var sorted_data = Object.keys(parsed_data).map(function(key) {
+        return [key, parsed_data[key]];
+    });
+    sorted_data.sort(function(first, second) {
+        return second[1] - first[1];
+    });
+    
+    // Check that user submitted number does not exceed max number of chatters
+    if (num_users > keys.length || num_users < 1) {
+        num_users = keys.length;
+    }
 
-    for (const [user, count] of Object.entries(parsed_data)) {
-        vis.addRow([user, count]);
+    var highest_chatters = [];
+    var chatters_values = [];
+    for (let i = 0; i < num_users; i++) {
+        highest_chatters.push(sorted_data[i][0]);
+        chatters_values.push(sorted_data[i][1]);
     }
 
     var options = {
-        title: "Number of messages per user",
-        legend: {
-            position: "bottom"
+        title: {
+            text: `Most Active Chatters`,
+            align: 'center'
+        },
+        chart: {
+            type: 'bar',
+            height: 'auto',
+            animations: {
+                enabled: true,
+                easing: 'easeinout',
+                speed: 800,
+                animateGradually: {
+                    enabled: true,
+                    delay: 150
+                },
+                dynamicAnimation: {
+                    enabled: true,
+                    speed: 350
+                }
+            },
+            redrawOnWindowResize: true
+        },
+        series: [
+            {
+                name: 'Users',
+                data: chatters_values
+            }
+        ],
+        stroke: {
+            width: 2
+        },
+        fill: {
+            type: 'gradient'
+        },
+        plotOptions: {
+            bar: {
+                columnWidth: "20%",
+                horizontal: true
+            }
+        },
+        xaxis: {
+            categories: highest_chatters,
+            title: {
+                text: "Number of Messages Sent"
+            }
+        },
+        yaxis: {
+            min: 0,
+            axisBorder: {
+                show: true
+            },
+            axisTicks: {
+                show: true
+            },
+            title: {
+                text: `Top ${num_users} Most Active Users`
+            }
+        },
+        tooltip: {
+            enabled: true
         }
-    };
-
-    var chart = new google.visualization.BarChart(document.getElementById('messages_per_user'));
-    chart.draw(vis, options);
+      }
+      
+      var chart = new ApexCharts(document.querySelector("#messages_per_user"), options);
+      chart.render();
 }
 
 
@@ -518,28 +909,94 @@ function emote_by_usage_parse(chat) {
     return ebu;
 }
 
-function emote_by_usage_vis(chat_data) {
+function emote_by_usage_vis(chat_data, num_emotes) {
     // Function to create the visualization, and insert the visualization into its respective <div>
     var parsed_data = emote_by_usage_parse(chat_data);
+    var keys = $.map(parsed_data, function(value, key) { return key });
+    
+    var sorted_data = Object.keys(parsed_data).map(function(key) {
+        return [key, parsed_data[key]];
+    });
+    sorted_data.sort(function(first, second) {
+        return second[1] - first[1];
+    });
+    
+    // Check that user submitted number does not exceed max number of emotes
+    if (num_emotes > keys.length || num_emotes < 1) {
+        num_emotes = keys.length;
+    }
 
-    var vis = new google.visualization.DataTable(); 
-    vis.addColumn('string', 'Emote');
-    vis.addColumn('number', 'Usage');
-
-    for (const [emote, count] of Object.entries(parsed_data)) {
-        vis.addRow([emote, count]);
+    var highest_emotes = [];
+    var emote_names = [];
+    for (let i = 0; i < num_emotes; i++) {
+        highest_emotes.push(sorted_data[i][0]);
+        emote_names.push(sorted_data[i][1]);
     }
 
     var options = {
-        title: "Emote Usage",
-        legend: {
-            position: "bottom"
+        title: {
+            text: `Top ${num_emotes} Most Used Emotes`,
+            align: 'center'
         },
-        vAxis: {
-            title: "Number of Times Emote Was Used"
+        chart: {
+            type: 'bar',
+            height: 'auto',
+            animations: {
+                enabled: true,
+                easing: 'easeinout',
+                speed: 800,
+                animateGradually: {
+                    enabled: true,
+                    delay: 150
+                },
+                dynamicAnimation: {
+                    enabled: true,
+                    speed: 350
+                }
+            },
+            redrawOnWindowResize: true
+        },
+        series: [
+            {
+                name: 'Emotes',
+                data: emote_names
+            }
+        ],
+        stroke: {
+            width: 2
+        },
+        fill: {
+            type: 'gradient'
+        },
+        plotOptions: {
+            bar: {
+                columnWidth: "20%",
+                horizontal: true
+            }
+        },
+        xaxis: {
+            categories: highest_emotes,
+            title: {
+                text: "Number of Messages Sent Containing Emote"
+            }
+        },
+        yaxis: {
+            min: 0,
+            axisBorder: {
+                show: true
+            },
+            axisTicks: {
+                show: true
+            },
+            title: {
+                text: `Top ${num_emotes} Most Used Emotes`
+            }
+        },
+        tooltip: {
+            enabled: true
         }
-    };
-
-    var chart = new google.visualization.ColumnChart(document.getElementById('emote_by_usage'));
-    chart.draw(vis, options);
+      }
+      
+      var chart = new ApexCharts(document.querySelector("#emote_by_usage"), options);
+      chart.render();
 }
