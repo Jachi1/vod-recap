@@ -100,15 +100,3 @@ function failure(result) {
     console.log("Failed request");
     console.log(result);
 }
-
-// For window resize events   
-$(window).resize(function() {
-    if(this.resizeTO) clearTimeout(this.resizeTO);
-    this.resizeTO = setTimeout(function() {
-        $(this).trigger('resizeEnd');
-    }, 500);
-});
-  
-$(window).on('resizeEnd', function() {
-    create_visualizations(JSON.parse(localStorage.getItem(String(url))));
-});
