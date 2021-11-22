@@ -99,4 +99,8 @@ function get_results(result, status, xhr) {
 function failure(result) {
     console.log("Failed request");
     console.log(result);
+    alert("Failed to load data from VOD.");
+    $(".loader").css("display", "none");
+    $("#search-contents").css("margin-top", "5em");
+    return;
 }
