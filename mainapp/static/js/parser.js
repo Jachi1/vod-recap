@@ -11,6 +11,8 @@ function create_visualizations(chat_data) {
     messages_per_user_vis(chat_data, 10);
     emote_by_usage_vis(chat_data, 10);
     number_of_specific_emotes(chat_data, 30);
+    subs_vs_non_sub_chatters(chat_data);
+    subscriber_durations(chat_data);
 
     // Print header-bar to display VOD header information
     if (url.substr(12, 6) == "twitch"){
@@ -44,11 +46,11 @@ function create_bins(interval, chat) {
     let last_timestamp = chat[chat.length-1]["time_in_seconds"];
     let itr = 1;
     let counter = 1;
-    while (itr <= last_timestamp) {
+    while (itr <= last_timestamp + interval) {
         key = interval * counter;
         bins[seconds_to_hours_min_sec(key)] = 0;
         itr += interval;
-        counter += 1;
+        counter++;
     }
     return bins;
 }
@@ -59,7 +61,7 @@ function create_bins_compare(interval, chat) {
     var last_timestamp = chat[chat.length-1]["time_in_seconds"];
     let itr = 1;
     let counter = 1;
-    while (itr <= last_timestamp) {
+    while (itr <= last_timestamp + interval) {
         key = interval * counter;
         key_conv = seconds_to_hours_min_sec(key);
         bins[key_conv] = [0,0];
@@ -427,18 +429,21 @@ function emote_or_not_messages_per_second_parse(chat, interval) {
             continue;
         }
         if (tis <= (interval * next_bin)) {
+            let bin = seconds_to_hours_min_sec(interval * next_bin);
             if (chat[msg]["is_emote"]) { 
-                bins[seconds_to_hours_min_sec(interval * next_bin)][1]++;
+                bins[bin][1]++;
             } else {
-                bins[seconds_to_hours_min_sec(interval * next_bin)][0]++;
+                bins[bin][0]++;
             }
         }
         else {
             next_bin++;
+            let bin = seconds_to_hours_min_sec(interval * next_bin);
+            console.log(bin);
             if (chat[msg]["is_emote"]) { 
-                bins[seconds_to_hours_min_sec(interval * next_bin)][1]++;
+                bins[bin][1]++;
             } else {
-                bins[seconds_to_hours_min_sec(interval * next_bin)][0]++;
+                bins[bin][0]++;
             }
         }
     }
@@ -686,18 +691,20 @@ function sub_or_not_messages_per_second_parse(chat, interval) {
             continue;
         }
         if (tis <= (interval * next_bin)) {
+            let bin = seconds_to_hours_min_sec(interval * next_bin);
             if (chat[msg]["subscriber"]) { 
-                bins[seconds_to_hours_min_sec(interval * next_bin)][1]++;
+                bins[bin][1]++;
             } else {
-                bins[seconds_to_hours_min_sec(interval * next_bin)][0]++;
+                bins[bin][0]++;
             }
         }
         else {
             next_bin++;
+            let bin = seconds_to_hours_min_sec(interval * next_bin);
             if (chat[msg]["subscriber"]) { 
-                bins[seconds_to_hours_min_sec(interval * next_bin)][1]++;
+                bins[bin][1]++;
             } else {
-                bins[seconds_to_hours_min_sec(interval * next_bin)][0]++;
+                bins[bin][0]++;
             }
         }
     }
@@ -1036,5 +1043,126 @@ function emote_by_usage_vis(chat_data, num_emotes) {
       }
       
       var chart = new ApexCharts(document.querySelector("#emote_by_usage"), options);
+      chart.render();
+}
+
+function get_number_of_subscriber_chatters(chat) {
+    var num_subs = 0
+    var num_non_subs = 0;
+    var users = [];
+
+    for (var msg = 0; msg < chat.length; msg++) {
+        if (chat[msg]["subscriber"]) {
+            if (!(chat[msg]["author"] in users)) {
+                num_subs++;
+                users.push(chat[msg]["author"]);
+            }
+        } else {
+            num_non_subs++;
+        }
+    }
+    return {'num_sub_chatters': num_subs, 'num_non_sub_chatters': num_non_subs};
+}
+
+function subs_vs_non_sub_chatters(chat) {
+    var data = get_number_of_subscriber_chatters(chat);
+
+    var options = {
+        title: {
+            text: `Number of Subscribed Chatters Vs. Not-subscribed Chatters`,
+            align: 'center'
+        },
+        chart: {
+            type: 'pie',
+            height: '250',
+            animations: {
+                enabled: true,
+                easing: 'easeinout',
+                speed: 800,
+                animateGradually: {
+                    enabled: true,
+                    delay: 150
+                },
+                dynamicAnimation: {
+                    enabled: true,
+                    speed: 350
+                }
+            },
+            redrawOnWindowResize: true,
+            background: '#343a40',
+            foreColor: '#fff'
+        },
+        series: [data.num_sub_chatters, data.num_non_sub_chatters],
+        labels: ['Subscribed Chatters', 'Non-subscribed Chatters'],
+        fill: {
+            type: 'gradient'
+        },
+        tooltip: {
+            enabled: true
+        }
+      }
+      
+      var chart = new ApexCharts(document.querySelector("#num_sub_vs_not_sub"), options);
+      chart.render();
+}
+
+
+function get_subscriber_durations(chat) {
+    var subscription_durations = {};
+
+    for (var msg = 0; msg < chat.length; msg++) {
+        subscription_durations[chat[msg]["subscription_duration"]] = 0
+    }
+
+    for (var msg = 0; msg < chat.length; msg++) {
+        subscription_durations[chat[msg]["subscription_duration"]]++;
+    }
+
+    return subscription_durations;
+}
+
+function subscriber_durations(chat) {
+    var data = get_subscriber_durations(chat);
+    var values = $.map(data, function(value, key) { return value });
+    var keys = $.map(data, function(value, key) { return key });
+
+    // console.log(values);
+    // console.log(keys);
+    var options = {
+        title: {
+            text: `Subscription Durations`,
+            align: 'center'
+        },
+        chart: {
+            type: 'pie',
+            height: '250',
+            animations: {
+                enabled: true,
+                easing: 'easeinout',
+                speed: 800,
+                animateGradually: {
+                    enabled: true,
+                    delay: 150
+                },
+                dynamicAnimation: {
+                    enabled: true,
+                    speed: 350
+                }
+            },
+            redrawOnWindowResize: true,
+            background: '#343a40',
+            foreColor: '#fff'
+        },
+        series: values,
+        labels: keys,
+        fill: {
+            type: 'gradient'
+        },
+        tooltip: {
+            enabled: true
+        }
+      }
+      
+      var chart = new ApexCharts(document.querySelector("#subscriber_durations"), options);
       chart.render();
 }
