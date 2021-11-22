@@ -190,23 +190,27 @@ function emote_messages_per_second_parse(chat, interval) {
         return;
     }
 
-    let current_position = 0;
-    var mps = {};
+    var emotes = create_bins(interval, chat);
+
+    var next_bin = 1;
     for (var msg = 0; msg < chat.length; msg++) {
-        if (chat[msg]["is_emote"]) {
-            tis = parseInt(chat[msg]["time_in_seconds"]);
-            if (tis < 0) {
-                continue;
+        let tis = chat[msg]["time_in_seconds"];
+        if (tis < 0) {
+            continue;
+        }
+        if (tis <= (interval * next_bin)) {
+            if (chat[msg]["is_emote"]) { 
+                emotes[seconds_to_hours_min_sec(interval * next_bin)]++;
             }
-            let position = Math.floor(tis / interval);
-            while (current_position <= position) {
-                mps[current_position] = 0;
-                current_position++;
+        }
+        else {
+            next_bin++;
+            if (chat[msg]["is_emote"]) { 
+                emotes[seconds_to_hours_min_sec(interval * next_bin)]++;
             }
-            mps[position] = mps[position] + 1;
         }
     }
-    return mps;
+    return emotes;
 }
 
 function emote_messages_per_second_vis(chat_data, interval) {
@@ -303,21 +307,23 @@ function messages_per_second_parse(chat, interval) {
         return;
     }
 
-    let current_position = 0;
-    var mps = {};
+    var messages = create_bins(interval, chat);
+
+    var next_bin = 1;
     for (var msg = 0; msg < chat.length; msg++) {
-        tis = parseInt(chat[msg]["time_in_seconds"]);
+        let tis = chat[msg]["time_in_seconds"];
         if (tis < 0) {
             continue;
         }
-        let position = Math.floor(tis / interval);
-        while (current_position <= position) {
-            mps[current_position] = 0;
-            current_position++;
+        if (tis <= (interval * next_bin)) {
+            messages[seconds_to_hours_min_sec(interval * next_bin)]++;
         }
-        mps[position] = mps[position] + 1;
+        else {
+            next_bin++;
+            messages[seconds_to_hours_min_sec(interval * next_bin)]++;
+        }
     }
-    return mps;
+    return messages;
 }
 
 function messages_per_second_vis(chat_data, interval) {
@@ -556,23 +562,27 @@ function sub_messages_per_second_parse(chat, interval) {
         return;
     }
 
-    let current_position = 0;
-    var mps = {};
+    var sub_msgs = create_bins(interval, chat);
+
+    var next_bin = 1;
     for (var msg = 0; msg < chat.length; msg++) {
-        if (chat[msg]["subscriber"]) {
-            tis = parseInt(chat[msg]["time_in_seconds"]);
-            if (tis < 0) {
-                continue;
+        let tis = chat[msg]["time_in_seconds"];
+        if (tis < 0) {
+            continue;
+        }
+        if (tis <= (interval * next_bin)) {
+            if (chat[msg]["subscriber"]) { 
+                sub_msgs[seconds_to_hours_min_sec(interval * next_bin)]++;
             }
-            let position = Math.floor(tis / interval);
-            while (current_position <= position) {
-                mps[current_position] = 0;
-                current_position++;
+        }
+        else {
+            next_bin++;
+            if (chat[msg]["subscriber"]) { 
+                sub_msgs[seconds_to_hours_min_sec(interval * next_bin)]++;
             }
-            mps[position] = mps[position] + 1;
         }
     }
-    return mps;
+    return sub_msgs;
 }
 
 function sub_messages_per_second_vis(chat_data, interval) {
@@ -811,9 +821,9 @@ function messages_per_user_parse(chat) {
     for (var msg = 0; msg < chat.length; msg++) {
         let author = chat[msg]["author"];
         if (author in mpu){
-            mpu[author] += 1;
+            mpu[author]++;
         }
-        else{
+        else {
             mpu[author] = 1;
         }
     }
@@ -922,7 +932,7 @@ function emote_by_usage_parse(chat) {
             for (var emote = 0; emote < chat[msg]["emotes"].length; emote++){
                 let curr_emote = chat[msg]["emotes"][emote];
                 if (curr_emote in ebu){
-                    ebu[curr_emote] += 1;
+                    ebu[curr_emote]++;
                 }
                 else{
                     ebu[curr_emote] = 1;
