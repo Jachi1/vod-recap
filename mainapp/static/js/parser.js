@@ -407,35 +407,36 @@ function messages_per_second_vis(chat_data, interval) {
 }
 
 
-
 function emote_or_not_messages_per_second_parse(chat, interval) {
-    // Function to parse the chat vod data into the proper format
     if (!interval) {
         return;
     }
 
-    let current_position = 0;
-    var mps = {};
+    var bins = create_bins_compare(interval, chat);
+
+    var next_bin = 1;
     for (var msg = 0; msg < chat.length; msg++) {
-        tis = parseInt(chat[msg]["time_in_seconds"]);
+        let tis = chat[msg]["time_in_seconds"];
         if (tis < 0) {
             continue;
         }
-        let position = Math.floor(tis / interval);
-
-        while (current_position <= position) {
-            mps[current_position] = [0,0];
-            current_position++;
+        if (tis <= (interval * next_bin)) {
+            if (chat[msg]["is_emote"]) { 
+                bins[seconds_to_hours_min_sec(interval * next_bin)][1]++;
+            } else {
+                bins[seconds_to_hours_min_sec(interval * next_bin)][0]++;
+            }
         }
-
-        if (chat[msg]["is_emote"]) {
-            mps[position][1] = mps[position][1] + 1;
-        }
-        else{
-            mps[position][0] = mps[position][0] + 1;
+        else {
+            next_bin++;
+            if (chat[msg]["is_emote"]) { 
+                bins[seconds_to_hours_min_sec(interval * next_bin)][1]++;
+            } else {
+                bins[seconds_to_hours_min_sec(interval * next_bin)][0]++;
+            }
         }
     }
-    return mps;
+    return bins;
 }
 
 function emote_or_not_messages_per_second_vis(chat_data, interval) {
@@ -461,6 +462,17 @@ function emote_or_not_messages_per_second_vis(chat_data, interval) {
         title: {
             text: `Emotes Vs. Messages per ${interval} Seconds`,
             align: 'center'
+        },
+        legend: {
+            show: true,
+            position: 'top',
+            horizontalAlign: 'right',
+            onItemClick: {
+                toggleDataSeries: true
+            },
+            onItemHover: {
+                highlightDataSeries: true
+            }
         },
         chart: {
             type: 'line',
@@ -650,35 +662,36 @@ function sub_messages_per_second_vis(chat_data, interval) {
 }
 
 
-
 function sub_or_not_messages_per_second_parse(chat, interval) {
-    // Function to parse the chat vod data into the proper format
     if (!interval) {
         return;
     }
 
-    let current_position = 0;
-    var mps = {};
+    var bins = create_bins_compare(interval, chat);
+
+    var next_bin = 1;
     for (var msg = 0; msg < chat.length; msg++) {
-        tis = parseInt(chat[msg]["time_in_seconds"]);
+        let tis = chat[msg]["time_in_seconds"];
         if (tis < 0) {
             continue;
         }
-        let position = Math.floor(tis / interval);
-
-        while (current_position <= position) {
-            mps[current_position] = [0,0];
-            current_position++;
+        if (tis <= (interval * next_bin)) {
+            if (chat[msg]["subscriber"]) { 
+                bins[seconds_to_hours_min_sec(interval * next_bin)][1]++;
+            } else {
+                bins[seconds_to_hours_min_sec(interval * next_bin)][0]++;
+            }
         }
-
-        if (chat[msg]["subscriber"]) {
-            mps[position][1] = mps[position][1] + 1;
-        }
-        else{
-            mps[position][0] = mps[position][0] + 1;
+        else {
+            next_bin++;
+            if (chat[msg]["subscriber"]) { 
+                bins[seconds_to_hours_min_sec(interval * next_bin)][1]++;
+            } else {
+                bins[seconds_to_hours_min_sec(interval * next_bin)][0]++;
+            }
         }
     }
-    return mps;
+    return bins;
 }
 
 function sub_or_not_messages_per_second_vis(chat_data, interval) {
@@ -704,6 +717,17 @@ function sub_or_not_messages_per_second_vis(chat_data, interval) {
         title: {
             text: `Subscriber Vs. Non-subscriber Messages per ${interval} Seconds`,
             align: 'center'
+        },
+        legend: {
+            show: true,
+            position: 'top',
+            horizontalAlign: 'right',
+            onItemClick: {
+                toggleDataSeries: true
+            },
+            onItemHover: {
+                highlightDataSeries: true
+            }
         },
         chart: {
             type: 'line',
