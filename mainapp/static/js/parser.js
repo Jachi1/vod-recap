@@ -85,13 +85,13 @@ function number_of_specific_emotes_parse(chat, interval) {
             continue;
         }
         if (tis <= (interval * next_bin)) {
-            if (chat[msg]["message"].includes("Pog") || chat[msg]["message"].includes("POGGERS") || chat[msg]["message"].includes("LULW") || chat[msg]["message"].includes("LUL")) { 
+            if (chat[msg]["message"].includes("Pog") || chat[msg]["message"].includes("POGGERS") || chat[msg]["message"].includes("LULW") || chat[msg]["message"].includes("LUL") || chat[msg]["message"].includes("OMEGALUL")) { 
                 emotes[seconds_to_hours_min_sec(interval * next_bin)]++;
             }
         }
         else {
             next_bin++;
-            if (chat[msg]["message"].includes("Pog") || chat[msg]["message"].includes("POGGERS") || chat[msg]["message"].includes("LULW") || chat[msg]["message"].includes("LUL")) { 
+            if (chat[msg]["message"].includes("Pog") || chat[msg]["message"].includes("POGGERS") || chat[msg]["message"].includes("LULW") || chat[msg]["message"].includes("LUL") || chat[msg]["message"].includes("OMEGALUL")) { 
                 emotes[seconds_to_hours_min_sec(interval * next_bin)]++;
             }
         }
@@ -439,7 +439,6 @@ function emote_or_not_messages_per_second_parse(chat, interval) {
         else {
             next_bin++;
             let bin = seconds_to_hours_min_sec(interval * next_bin);
-            console.log(bin);
             if (chat[msg]["is_emote"]) { 
                 bins[bin][1]++;
             } else {
@@ -1126,8 +1125,6 @@ function subscriber_durations(chat) {
     var values = $.map(data, function(value, key) { return value });
     var keys = $.map(data, function(value, key) { return key });
 
-    // console.log(values);
-    // console.log(keys);
     var options = {
         title: {
             text: `Subscription Durations`,
