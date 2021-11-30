@@ -3,10 +3,7 @@
 
 function create_visualizations(chat_data) {
     // Insert all functions that create visualizations
-    emote_messages_per_second_vis(chat_data, 30);
-    messages_per_second_vis(chat_data, 30);
     emote_or_not_messages_per_second_vis(chat_data, 30);
-    sub_messages_per_second_vis(chat_data, 30);
     sub_or_not_messages_per_second_vis(chat_data, 30);
     messages_per_user_vis(chat_data, 10);
     emote_by_usage_vis(chat_data, 10);
@@ -120,8 +117,10 @@ function number_of_specific_emotes(chat_data, interval) {
             height: 'auto',
             events: {
                 markerClick: function(event, chartContext, { seriesIndex, dataPointIndex, config}) {
-                    let vod_timestamp = `${url}?t=${seconds_to_hours_min_sec(dataPointIndex * interval)}`;
-                    window.open(vod_timestamp, '_blank').focus();
+                    if (event.ctrlKey) {
+                        let vod_timestamp = `${url}?t=${seconds_to_hours_min_sec(dataPointIndex * interval)}`;
+                        window.open(vod_timestamp, '_blank');
+                    }
                 }
             },
             animations: {
@@ -135,6 +134,17 @@ function number_of_specific_emotes(chat_data, interval) {
                 dynamicAnimation: {
                     enabled: true,
                     speed: 350
+                }
+            },
+            toolbar: {
+                show: true,
+                tools: {
+                    download: true,
+                    selection: true,
+                    zoom: true,
+                    zoomout: true,
+                    pan: false,
+                    reset: true
                 }
             },
             redrawOnWindowResize: true,
@@ -236,8 +246,10 @@ function emote_messages_per_second_vis(chat_data, interval) {
             height: 'auto',
             events: {
                 markerClick: function(event, chartContext, { seriesIndex, dataPointIndex, config}) {
-                    let vod_timestamp = `${url}?t=${seconds_to_hours_min_sec(dataPointIndex * interval)}`;
-                    window.open(vod_timestamp, '_blank').focus();
+                    if (event.ctrlKey) {
+                        let vod_timestamp = `${url}?t=${seconds_to_hours_min_sec(dataPointIndex * interval)}`;
+                        window.open(vod_timestamp, '_blank');
+                    }
                 }
             },
             animations: {
@@ -349,8 +361,10 @@ function messages_per_second_vis(chat_data, interval) {
             height: 'auto',
             events: {
                 markerClick: function(event, chartContext, { seriesIndex, dataPointIndex, config}) {
-                    let vod_timestamp = `${url}?t=${seconds_to_hours_min_sec(dataPointIndex * interval)}`;
-                    window.open(vod_timestamp, '_blank').focus();
+                    if (event.ctrlKey) {
+                        let vod_timestamp = `${url}?t=${seconds_to_hours_min_sec(dataPointIndex * interval)}`;
+                        window.open(vod_timestamp, '_blank');
+                    }
                 }
             },
             animations: {
@@ -489,8 +503,10 @@ function emote_or_not_messages_per_second_vis(chat_data, interval) {
             height: 'auto',
             events: {
                 markerClick: function(event, chartContext, { seriesIndex, dataPointIndex, config}) {
-                    let vod_timestamp = `${url}?t=${seconds_to_hours_min_sec(dataPointIndex * interval)}`;
-                    window.open(vod_timestamp, '_blank').focus();
+                    if (event.ctrlKey) {
+                        let vod_timestamp = `${url}?t=${seconds_to_hours_min_sec(dataPointIndex * interval)}`;
+                        window.open(vod_timestamp, '_blank');
+                    }
                 }
             },
             animations: {
@@ -504,6 +520,17 @@ function emote_or_not_messages_per_second_vis(chat_data, interval) {
                 dynamicAnimation: {
                     enabled: true,
                     speed: 350
+                }
+            },
+            toolbar: {
+                show: true,
+                tools: {
+                    download: true,
+                    selection: true,
+                    zoom: true,
+                    zoomout: true,
+                    pan: false,
+                    reset: true
                 }
             },
             redrawOnWindowResize: true,
@@ -610,8 +637,10 @@ function sub_messages_per_second_vis(chat_data, interval) {
             height: 'auto',
             events: {
                 markerClick: function(event, chartContext, { seriesIndex, dataPointIndex, config}) {
-                    let vod_timestamp = `${url}?t=${seconds_to_hours_min_sec(dataPointIndex * interval)}`;
-                    window.open(vod_timestamp, '_blank').focus();
+                    if (event.ctrlKey) {
+                        let vod_timestamp = `${url}?t=${seconds_to_hours_min_sec(dataPointIndex * interval)}`;
+                        window.open(vod_timestamp, '_blank');
+                    }
                 }
             },
             animations: {
@@ -750,8 +779,10 @@ function sub_or_not_messages_per_second_vis(chat_data, interval) {
             height: 'auto',
             events: {
                 markerClick: function(event, chartContext, { seriesIndex, dataPointIndex, config}) {
-                    let vod_timestamp = `${url}?t=${seconds_to_hours_min_sec(dataPointIndex * interval)}`;
-                    window.open(vod_timestamp, '_blank').focus();
+                    if (event.ctrlKey) {
+                        let vod_timestamp = `${url}?t=${seconds_to_hours_min_sec(dataPointIndex * interval)}`;
+                        window.open(vod_timestamp, '_blank');
+                    }
                 }
             },
             animations: {
@@ -765,6 +796,17 @@ function sub_or_not_messages_per_second_vis(chat_data, interval) {
                 dynamicAnimation: {
                     enabled: true,
                     speed: 350
+                }
+            },
+            toolbar: {
+                show: true,
+                tools: {
+                    download: true,
+                    selection: true,
+                    zoom: true,
+                    zoomout: true,
+                    pan: false,
+                    reset: true
                 }
             },
             redrawOnWindowResize: true,
@@ -867,7 +909,7 @@ function messages_per_user_vis(chat_data, num_users) {
         },
         chart: {
             type: 'bar',
-            height: 'auto',
+            height: '500',
             animations: {
                 enabled: true,
                 easing: 'easeinout',
@@ -982,7 +1024,7 @@ function emote_by_usage_vis(chat_data, num_emotes) {
         },
         chart: {
             type: 'bar',
-            height: 'auto',
+            height: '500',
             animations: {
                 enabled: true,
                 easing: 'easeinout',
@@ -1091,8 +1133,8 @@ function subs_vs_non_sub_chatters(chat) {
             background: '#343a40',
             foreColor: '#fff'
         },
-        series: [data.num_sub_chatters, data.num_non_sub_chatters],
-        labels: ['Subscribed Chatters', 'Non-subscribed Chatters'],
+        series: [data.num_non_sub_chatters, data.num_sub_chatters],
+        labels: ['Non-subscribed Chatters', 'Subscribed Chatters'],
         fill: {
             type: 'gradient'
         },
@@ -1110,11 +1152,15 @@ function get_subscriber_durations(chat) {
     var subscription_durations = {};
 
     for (var msg = 0; msg < chat.length; msg++) {
-        subscription_durations[chat[msg]["subscription_duration"]] = 0
+        if (chat[msg]["subscription_duration"] > 0) {
+            subscription_durations[chat[msg]["subscription_duration"]] = 0;
+        }
     }
 
     for (var msg = 0; msg < chat.length; msg++) {
-        subscription_durations[chat[msg]["subscription_duration"]]++;
+        if (chat[msg]["subscription_duration"] in subscription_durations) {
+            subscription_durations[chat[msg]["subscription_duration"]]++;
+        }
     }
 
     return subscription_durations;
@@ -1127,12 +1173,12 @@ function subscriber_durations(chat) {
 
     var options = {
         title: {
-            text: `Subscription Durations`,
+            text: `Subscription Durations for Subscribed Chatters`,
             align: 'center'
         },
         chart: {
-            type: 'pie',
-            height: '250',
+            type: 'bar',
+            height: '500',
             animations: {
                 enabled: true,
                 easing: 'easeinout',
@@ -1150,8 +1196,43 @@ function subscriber_durations(chat) {
             background: '#343a40',
             foreColor: '#fff'
         },
-        series: values,
+        legend: {
+            formatter: function(seriesName, opts) {
+                if (seriesName == 1) { return [seriesName, " month"] }
+                return [seriesName, " months"]
+            }        
+        },
+        series: [
+            {
+                name: 'Number of Subscribed Chatters Subscription Durations',
+                data: values
+            }
+        ],
         labels: keys,
+        plotOptions: {
+            bar: {
+                columnWidth: "20%",
+                horizontal: true
+            }
+        },
+        xaxis: {
+            categories: keys,
+            title: {
+                text: "Number of Chatters"
+            }
+        },
+        yaxis: {
+            min: 0,
+            axisBorder: {
+                show: true
+            },
+            axisTicks: {
+                show: true
+            },
+            title: {
+                text: `Subscription Duration In Months`
+            }
+        },
         fill: {
             type: 'gradient'
         },
