@@ -8,7 +8,7 @@ html, body {
 }
 
 #search-div {
-    margin-top: 5em;
+    margin-top: 15em;
 }
 
 .loader {
@@ -66,4 +66,9 @@ html, body {
 
 .vod-data{
     padding: 2em;
+    margin-top: -10em;
+}
+
+#tooltips {
+    color: white;
 }
