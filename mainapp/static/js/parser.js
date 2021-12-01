@@ -1,15 +1,24 @@
 // Will hold individual parsers for certain visualizations.
 // Input should be JSON retrieved from API
+var chat_meta_data;
+var emote_or_not_msg_chart;
+var sub_or_not_sub_chart;
+var messages_per_user_chart;
+var emote_by_usage_chart;
+var number_of_specific_emotes_chart;
+var sub_vs_not_sub_chatters_chart;
+var subscriber_durations_chart;
 
 function create_visualizations(chat_data) {
     // Insert all functions that create visualizations
-    emote_or_not_messages_per_second_vis(chat_data, 30);
-    sub_or_not_messages_per_second_vis(chat_data, 30);
-    messages_per_user_vis(chat_data, 10);
-    emote_by_usage_vis(chat_data, 10);
-    number_of_specific_emotes(chat_data, 30);
-    subs_vs_non_sub_chatters(chat_data);
-    subscriber_durations(chat_data);
+    chat_meta_data = chat_data;
+    emote_or_not_msg_chart = emote_or_not_messages_per_second_vis(chat_data, 30);
+    sub_or_not_sub_chart = sub_or_not_messages_per_second_vis(chat_data, 30);
+    messages_per_user_chart = messages_per_user_vis(chat_data, 10);
+    emote_by_usage_chart = emote_by_usage_vis(chat_data, 10);
+    number_of_specific_emotes_chart = number_of_specific_emotes(chat_data, 30);
+    sub_vs_not_sub_chatters_chart = subs_vs_non_sub_chatters(chat_data);
+    subscriber_durations_chart = subscriber_durations(chat_data);
 
     // Print header-bar to display VOD header information
     if (url.substr(12, 6) == "twitch"){
@@ -28,6 +37,8 @@ function create_visualizations(chat_data) {
         "Number of Messages: " + chat_data.length + "<br>" +
         "VOD Length: " + chat_data[chat_data.length - 1]["time_stamp_in_vod"] + "<br>" + 
         "</div>";
+
+    $("#interval-div").css("display", "block");
 }
 
 function seconds_to_hours_min_sec(num) {
@@ -55,7 +66,7 @@ function create_bins(interval, chat) {
 function create_bins_compare(interval, chat) {
     var bins = {};
     bins[seconds_to_hours_min_sec(0)] = [0,0];
-    var last_timestamp = chat[chat.length-1]["time_in_seconds"];
+    var last_timestamp = chat[chat.length - 1]["time_in_seconds"];
     let itr = 1;
     let counter = 1;
     while (itr <= last_timestamp + interval) {
@@ -193,6 +204,7 @@ function number_of_specific_emotes(chat_data, interval) {
       
       var chart = new ApexCharts(document.querySelector("#funny_emotes"), options);
       chart.render();
+      return chart;
 }
 
 
@@ -311,6 +323,7 @@ function emote_messages_per_second_vis(chat_data, interval) {
       
       var chart = new ApexCharts(document.querySelector("#emote_messages_per_second"), options);
       chart.render();
+      return chart;
 }
 
 
@@ -426,6 +439,7 @@ function messages_per_second_vis(chat_data, interval) {
       
       var chart = new ApexCharts(document.querySelector("#messages_per_second"), options);
       chart.render();
+      return chart;
 }
 
 
@@ -433,7 +447,6 @@ function emote_or_not_messages_per_second_parse(chat, interval) {
     if (!interval) {
         return;
     }
-
     var bins = create_bins_compare(interval, chat);
 
     var next_bin = 1;
@@ -583,6 +596,7 @@ function emote_or_not_messages_per_second_vis(chat_data, interval) {
       
       var chart = new ApexCharts(document.querySelector("#emote_or_not_messages_per_second"), options);
       chart.render();
+      return chart;
 }
 
 
@@ -700,8 +714,9 @@ function sub_messages_per_second_vis(chat_data, interval) {
         }
       }
       
-      var chart = new ApexCharts(document.querySelector("#sub_messages_per_second"), options);
-      chart.render();
+    var chart = new ApexCharts(document.querySelector("#sub_messages_per_second"), options);
+    chart.render();
+    return chart
 }
 
 
@@ -859,6 +874,7 @@ function sub_or_not_messages_per_second_vis(chat_data, interval) {
       
       var chart = new ApexCharts(document.querySelector("#sub_or_not_messages_per_second"), options);
       chart.render();
+      return chart
 }
 
 
@@ -970,6 +986,7 @@ function messages_per_user_vis(chat_data, num_users) {
       
       var chart = new ApexCharts(document.querySelector("#messages_per_user"), options);
       chart.render();
+      return chart
 }
 
 
@@ -1085,6 +1102,7 @@ function emote_by_usage_vis(chat_data, num_emotes) {
       
       var chart = new ApexCharts(document.querySelector("#emote_by_usage"), options);
       chart.render();
+      return chart;
 }
 
 function get_number_of_subscriber_chatters(chat) {
@@ -1145,6 +1163,7 @@ function subs_vs_non_sub_chatters(chat) {
       
       var chart = new ApexCharts(document.querySelector("#num_sub_vs_not_sub"), options);
       chart.render();
+      return chart;
 }
 
 
@@ -1243,4 +1262,22 @@ function subscriber_durations(chat) {
       
       var chart = new ApexCharts(document.querySelector("#subscriber_durations"), options);
       chart.render();
+      return chart;
+}
+
+function update_interval() {
+    var new_interval = $("#interval").val();
+    try {
+        var int_interval = parseInt(new_interval);
+        emote_or_not_msg_chart.destroy();
+        sub_or_not_sub_chart.destroy();
+        number_of_specific_emotes_chart.destroy();
+
+        emote_or_not_messages_per_second_vis(chat_meta_data, int_interval);
+        sub_or_not_messages_per_second_vis(chat_meta_data, int_interval);
+        number_of_specific_emotes(chat_meta_data, int_interval);
+    } catch (error) {
+        alert("Failed to update interval.");
+        console.log(error);
+    }
 }
