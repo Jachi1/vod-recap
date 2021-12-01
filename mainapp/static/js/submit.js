@@ -1,20 +1,6 @@
-// Order of events to implement:
-// 1. Sanitize input
-// 2. Send input to API
-// 3. Reformat page with animation and display loading icon until API query finishes
-// 4. Store input from API as JSON
-// 5. Create and display visualizations
-
 const api_base_url = "https://vod-recap-api.ue.r.appspot.com";
 var data = {};
 var url;
-
-google.charts.load('current', {'packages':['corechart']});
-google.charts.setOnLoadCallback(empty);
-
-function empty() {
-    return;
-}
 
 
 function submit_url() {
@@ -22,7 +8,8 @@ function submit_url() {
     // Fetch input in #search-box DOM element
     let val = $("#search-box").val();
     url = sanitize_string(val).trim();
-    $("#search-contents").css("margin-top", "-2em");
+    $("#search-contents").css("margin-top", "-13em");
+    $("#tooltips").css("display", "none");
     $(".loader").css("display", "block");
 
     if (localStorage.getItem(String(url)) !== null) {
@@ -82,7 +69,7 @@ function get_results(result, status, xhr) {
     if (data.hasOwnProperty("err")) {
         alert(data["err"]);
         $(".loader").css("display", "none");
-        $("#search-contents").css("margin-top", "5em");
+        $("#search-contents").css("margin-top", "15em");
         return;
     }
 
@@ -91,8 +78,13 @@ function get_results(result, status, xhr) {
     } catch (error) {
         console.log("Local storage is full.");
     }
+    
     $(".loader").css("display", "none");                    // Remove spinner, then fill out visualization divs
-    create_visualizations(data);                            // Function will create all the other visualizations
+    try {
+        create_visualizations(data);                            // Function will create all the other visualizations
+    } catch (error) {
+        alert(`Failed to create visualizations: ${error}`);
+    }
 
 }
 
@@ -101,6 +93,6 @@ function failure(result) {
     console.log(result);
     alert("Failed to load data from VOD.");
     $(".loader").css("display", "none");
-    $("#search-contents").css("margin-top", "5em");
+    $("#search-contents").css("margin-top", "15em");
     return;
 }
