@@ -23,7 +23,7 @@ function create_visualizations(chat_data) {
     // Print header-bar to display VOD header information
     if (url.substr(12, 6) == "twitch"){
         document.getElementById("vod-header").innerHTML = 
-            "<a href='" + url + "'><img src = \"static/twitch-logo.png\"></a>" +
+            "<a href='" + url + "' target=\"_blank\"><img src = \"static/twitch-logo.png\"></a>" +
             "<div id = \"web-title\">Visualizing Twitch VOD Data</div>" + "<br>";
     }
     else if (url.substr(12, 7) == "youtube"){
@@ -35,7 +35,7 @@ function create_visualizations(chat_data) {
     document.getElementById("vod-header").innerHTML += 
         "<div id = \"vod-info\">" + 
         "Number of Messages: " + chat_data.length + "<br>" +
-        "VOD Length: " + chat_data[chat_data.length - 1]["time_stamp_in_vod"] + "<br>" + 
+        "VOD Length: " + seconds_to_hours_min_sec(chat_data[chat_data.length - 1]["time_in_seconds"]) + "<br>" + 
         "</div>";
 
     $("#interval-div").css("display", "block");
@@ -1279,7 +1279,7 @@ function update_interval() {
             alert("Interval value must be between 30 and 3600 seconds.");
             return;
         }
-        
+
         // Destroy and redraw charts
         emote_or_not_msg_chart.destroy();
         emote_or_not_messages_per_second_vis(chat_meta_data, int_interval);
