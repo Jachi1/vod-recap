@@ -93,6 +93,5 @@ function failure(result) {
     console.log(result);
     alert("Failed to load data from VOD.");
     $(".loader").css("display", "none");
-    $("#search-contents").css("margin-top", "15em");
     return;
 }
