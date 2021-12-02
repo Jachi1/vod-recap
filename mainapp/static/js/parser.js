@@ -1149,10 +1149,16 @@ function subs_vs_non_sub_chatters(chat) {
             },
             redrawOnWindowResize: true,
             background: '#343a40',
-            foreColor: '#fff'
+            foreColor: '#fff',
+            toolbar: {
+                show: true,
+                tools: {
+                    download: true,
+                }
+            },
         },
-        series: [data.num_non_sub_chatters, data.num_sub_chatters],
-        labels: ['Non-subscribed Chatters', 'Subscribed Chatters'],
+        series: [data.num_sub_chatters, data.num_non_sub_chatters],
+        labels: ['Subscribed Chatters', 'Non-subscribed Chatters'],
         fill: {
             type: 'gradient'
         },
@@ -1269,12 +1275,17 @@ function update_interval() {
     var new_interval = $("#interval").val();
     try {
         var int_interval = parseInt(new_interval);
+        if (int_interval < 30 || int_interval > 3600) {
+            alert("Interval value must be between 30 and 3600 seconds.");
+            return;
+        }
+        
+        // Destroy and redraw charts
         emote_or_not_msg_chart.destroy();
-        sub_or_not_sub_chart.destroy();
-        number_of_specific_emotes_chart.destroy();
-
         emote_or_not_messages_per_second_vis(chat_meta_data, int_interval);
+        sub_or_not_sub_chart.destroy();
         sub_or_not_messages_per_second_vis(chat_meta_data, int_interval);
+        number_of_specific_emotes_chart.destroy();
         number_of_specific_emotes(chat_meta_data, int_interval);
     } catch (error) {
         alert("Failed to update interval.");
