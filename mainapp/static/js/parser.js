@@ -1108,18 +1108,19 @@ function emote_by_usage_vis(chat_data, num_emotes) {
 function get_number_of_subscriber_chatters(chat) {
     var num_subs = 0
     var num_non_subs = 0;
-    var users = [];
+    var subscribers = new Set();
+    var non_subscribers = new Set();
 
     for (var msg = 0; msg < chat.length; msg++) {
-        if (chat[msg]["subscriber"]) {
-            if (!(chat[msg]["author"] in users)) {
-                num_subs++;
-                users.push(chat[msg]["author"]);
-            }
-        } else {
+        if (chat[msg]["subscriber"] && !(subscribers.has(chat[msg]["author"]))) {
+            num_subs++;
+            subscribers.add(chat[msg]["author"]);
+        } else if (!chat[msg]["subscriber"] && !(non_subscribers.has(chat[msg]["author"]))) {
             num_non_subs++;
+            non_subscribers.add(chat[msg]["author"]);
         }
     }
+
     return {'num_sub_chatters': num_subs, 'num_non_sub_chatters': num_non_subs};
 }
 
@@ -1175,6 +1176,7 @@ function subs_vs_non_sub_chatters(chat) {
 
 function get_subscriber_durations(chat) {
     var subscription_durations = {};
+    var subscribers = new Set();
 
     for (var msg = 0; msg < chat.length; msg++) {
         if (chat[msg]["subscription_duration"] > 0) {
@@ -1183,8 +1185,9 @@ function get_subscriber_durations(chat) {
     }
 
     for (var msg = 0; msg < chat.length; msg++) {
-        if (chat[msg]["subscription_duration"] in subscription_durations) {
+        if (chat[msg]["subscription_duration"] in subscription_durations && !(subscribers.has(chat[msg]["author"]))) {
             subscription_durations[chat[msg]["subscription_duration"]]++;
+            subscribers.add(chat[msg]["author"]);
         }
     }
 
